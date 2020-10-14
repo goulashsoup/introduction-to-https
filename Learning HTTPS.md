@@ -11,33 +11,21 @@ HTTPS however has just a [brief one paragraph page](https://developer.mozilla.or
 
 We will explore the depths of hell in 9 sections:
 
-<style>
-    ul.toc { list-style: none; }
+1. [Internet Protocol Recap](#1-internet-protocol-recap)
+2. [Browser to Website connection](#2-browser-to-website-connection)
+3. [Introduction to HTTPS](#3-introduction-to-https)
+4. [Cryptopgraphic Methods](#4-cryptopgraphic-methods)
+5. [X.509 Certificate](#5-x509-certificate)
+6. [TLS 1.2 in Detail](#6-tls-12-in-detail)
+7. [TLS 1.3 in Detail](#7-tls-13-in-detail)
+8. [Getting a Certificate](#8-getting-a-certificate)
+9. [HTTP Strict Transport Security (HSTS)](#9-http-strict-transport-security-hsts)
 
-    ul.toc a { text-decoration: none; }
+A. [Glossary](#a-glossary)
+B. [Sources](#b-sources)
+C. [References](#c-references)
 
-</style>
-
-<div>
-    <ul class="toc">
-        <li><a href="#1.-internet-protocol-recap">1. Internet Protocol Recap</a></li>
-        <li><a href="#2.-browser-to-website-connection">2. Browser to Website connection</a></li>
-        <li><a href="#3.-introduction-to-https">3. Introduction to HTTPS</a></li>
-        <li><a href="#4.-cryptopgraphic-methods">4. Cryptopgraphic Methods</a></li>
-        <li><a href="#5.-x.509-certificate">5. X.509 Certificate</a></li>
-        <li><a href="#6.-tls-1.2-in-detail">6. TLS 1.2 in Detail</a></li>
-        <li><a href="#7.-tls-1.3-in-detail">7. TLS 1.3 in Detail</a></li>
-        <li><a href="#8.-getting-a-certificate">8. Getting a Certificate</a></li>
-        <li><a href="#9.-http-strict-transport-security-(hsts)">9. HTTP Strict Transport Security (HSTS)</a></li>
-        <li><a href="#a.-glossary">A. Glossary</a></li>
-        <li><a href="#b.-sources">B. Sources</a></li>
-        <li><a href="#c.-references">C.
-                References</a></li>
-    </ul>
-</div>
-
-
-##1. Internet Protocol Recap
+## 1. Internet Protocol Recap
 
 Like you probably already know, data sent over the Internet means that the data is encapsulated in a packet of some protocol which is again encapsulated in a packet of some protocol until we reach the topmost layer. The Internet Protocol Suite has 4 layers of protocols.² Here is a list of the layers (from topmost to lowest) together with some protocols of interest for us:
 
@@ -67,7 +55,7 @@ For the Internet to work, the IP layer is important. Devices are identified by I
 
 Now we take a look at what happens when a website is called in a browser...
 
-##2. Browser to Website connection
+## 2. Browser to Website connection
 
 When a web address, which is a Uniform Resource Locator (URL) (e.g. `https://en.wikipedia.org/wiki/URL`), is entered into the address bar, the browser...
 
@@ -105,7 +93,7 @@ When a web address, which is a Uniform Resource Locator (URL) (e.g. `https://en.
 
 Now we have a brief understanding of what happens with HTTP. Of course the process can differ in many ways e.g. when the website got called before, the DNS query is not necessary because the browser cached the IP address.¹⁸ For HTTPS things will get terrifyingly complicated.
 
-##3. Introduction to HTTPS
+## 3. Introduction to HTTPS
 
 > Hypertext Transfer Protocol Secure (HTTPS) is an extension of the Hypertext Transfer Protocol (HTTP).¹
 >
@@ -137,9 +125,9 @@ Because the connection establishment is generic, from now on we call the browser
 
 Before getting into TLS more detailed, first we have to gain a little knowledge about the cryptographic methods used.
 
-##4. Cryptopgraphic Methods
+## 4. Cryptopgraphic Methods
 
-###4.1. Introduction
+### 4.1. Introduction
 
 > In cryptography, **encryption** is the process of **encoding information**. This process converts the original representation of the information, known as **plaintext**, into an alternative form known as **ciphertext**.³⁷
 >
@@ -159,7 +147,7 @@ In the simplest form (**symmetric cryptography**), 4 things are necessary to enc
 
 Encryption algorithms should apply the assumption, that it is technically infeasible to decrypt the ciphertext without the key, which is called the **computational hardness assumption**.⁴¹
 
-###4.2. Symmetric Cryptography
+### 4.2. Symmetric Cryptography
 
 > **Symmetric encryption** algorithms use a **single key** (or set of keys) to encrypt and decrypt the data. This **single key** - the **shared secret** - must be securely exchanged between the parties that will use it prior to the actual secure communication.⁴²
 
@@ -175,7 +163,7 @@ Summary:
 
 2. Both peers use the **shared secret** to encrypt then send + to receive then decrypt **message**s.
 
-###4.3. Asymmetric Cryptography
+### 4.3. Asymmetric Cryptography
 
 > **Asymmetric encryption** algorithms use a **pair of keys** - a **public and a private key** - and are generally referred to as **public-key cryptographic systems**.⁴³
 >
@@ -201,7 +189,7 @@ Summary:
 
 4. Now the **public key** can be used to decrypt data only to be encrypted with the **private key**. Or the **public key** can be used to encrypt data only to be decrypted with the **private key**.
 
-###4.4. Diffie-Hellman Exchange
+### 4.4. Diffie-Hellman Exchange
 
 > The **Diffie-Hellman exchange (DH)** is a method by which two (or in some case more) peers can independently create the same **shared secret** that may be subsequently used in a symmetric cryptographic algorithm.⁴⁴
 >
@@ -257,7 +245,7 @@ Summary:
 
 4. Both peers use the **shared secret** to encrypt then send + to receive then decrypt **message**s.
 
-###4.5. Message Digests (Hashes)
+### 4.5. Message Digests (Hashes)
 
 A **hash algorithm** creates a unique and relatively small fixed-size **digest** for a given message and is a one-way function, that is a function which is practically infeasible to invert.⁴⁸ᐟ⁴⁹
 
@@ -279,7 +267,7 @@ Summary:
 
 3. The receiving peer runs the same **hash** algorithm over the **message**. If the **hashed message** equals the **digest**, the content is assumed unaltered.
 
-###4.6. Message Authentication Code (MAC)
+### 4.6. Message Authentication Code (MAC)
 
 > The process of authentication and data integrity can use what is called a **Message Authentication Code** (**MAC**). The **MAC** combines the message digest with a **shared (secret) key**. The key part authenticates the sender, and the hash (or digest) part ensures data integrity.⁵⁰
 
@@ -311,7 +299,7 @@ Summary:
            Message is unaltered...
        }
 
-###4.7. Digital Signatures
+### 4.7. Digital Signatures
 
 > In the asymmetric or public-key world, the process of authentication and data integrity uses what is called a **digital signature**. The message being sent is again hashed to create a message **digest** to ensure data integrity.⁵¹
 
@@ -345,7 +333,7 @@ Summary:
            Data is unaltered...
        }
 
-###4.8. Forward Secrecy
+### 4.8. Forward Secrecy
 
 Although the term **forward secrecy** is used in a bunch of RFCs including the ones for TLS 1.2 and 1.3, there is no official definition and the one in wikipedia is borked.¹⁵³ᐟ²⁸ᐟ¹⁹⁹ᐟ²²³ Therefore i've decided to do a definition myself:
 
@@ -361,9 +349,9 @@ The encryption system provided in the example is not used in TLS 1.2 and TLS 1.3
 
 There is the concept of session resumption in both TLS 1.2 and TLS 1.3.¹²⁶ᐟ²⁸ In TLS 1.2, the encryption attributes do not change when a session is resumed.¹²⁶ In TLS 1.3, session resumption may include a so called **pre shared key** (**PSK**) that is send in the initial handshake, but because the message that includes the **PSK** is encrypted with the same encryption attributes for the application data of the initial session, it really doesn't enforce any more security, just an extra step to calculate the session keys.²²⁰ᐟ²⁸ Therefore in both TLS 1.2 and 1.3, resumed sessions really can be seen as belonging to the initial session.
 
-##5. X.509 Certificate
+## 5. X.509 Certificate
 
-###5.1. Introduction to X.509
+### 5.1. Introduction to X.509
 
 **X.509** is the standard defining the format of public key certificates used for TLS.⁵² **X.509** certificates are sent by the server in a TLS **Certificate** message.²⁴ The procedure of handling **X.509** certificates is basically the same in both TLS 1.2 and 1.3, just the usage of keys differs.⁵³ᐟ⁵⁴ Certificates are used to verify the relation between the certificate and its owner and also to encrypt/sign specific TLS messages.⁵²ᐟ⁵⁵ᐟ⁵⁶
 
@@ -414,7 +402,7 @@ The **DER** are one of three **ASN.1** encoding formats specified in the **X.609
 >         41 6e 79 62 6f 64 79 20 74 68 65 72 65 3f — value ("Anybody there?")
 ⁶⁴
 
-###5.2. Certificate Structure
+### 5.2. Certificate Structure
 
 The **X.509** version 3 (`X509v3`) certificate module definition is as follows:⁵⁹
 
@@ -536,7 +524,7 @@ The `TBSCertificate`'s most import fields are the following:⁵⁹
                pathLenConstraint       INTEGER (0..MAX) OPTIONAL
           }   
 
-###5.3 Certificate Signature Structure
+### 5.3 Certificate Signature Structure
 
 The whole **DER** encoded `TBSCertificate` value is used for the digital signature created with the private key of the certificate's `issuer`:⁸³ᐟ⁵⁹ᐟ⁸⁴ᐟ⁸⁵
 
@@ -553,7 +541,7 @@ The whole **DER** encoded `TBSCertificate` value is used for the digital signatu
 
 As you might notice, both `TBSCertificate` and `SIGNED` have a field to specify a signature algorithm (`TBSCertificate::signature` and `SIGNED::algorithm`). The algorithm of the `TBSCertificate` should be the same as the one in the **Certificate** (`SIGNED`) module to protect against *algorithm substitution attacks*.⁸⁶ᐟ⁸⁷
 
-###5.4. Certificate Chain
+### 5.4. Certificate Chain
 
 The `issuer` of a certificate identifies a *trusted authority* that signed the certificate with its private key.⁷² Logically if we do not trust the `subject` of a certificate, we shouldn't trust the `issuer` which means the `issuer` must be verified as well. Just like the server has a certificate identified by the `subject` field, an `issuer` also has a certificate that is signed by a higher authority creating a chain of certificates signed by higher authorities until we reach a self-signed **root certificate**.⁵⁵ᐟ⁸⁸ᐟ⁸⁹ᐟ⁹⁰ This is also called the **chain of trust** in which each certificate *certifies* the next.⁵⁵ᐟ⁸⁸ᐟ⁸⁹ᐟ⁹⁰ The **chain of trust** has the following kinds of certificates:
 
@@ -757,7 +745,7 @@ The `issuer` of a certificate identifies a *trusted authority* that signed the c
 />
 <p style="text-align: center;">Fig. 7 - X.509 certificate chain⁸⁸ ⁽ᵃˡᵗᵉʳᵉᵈ⁾</p>
 
-###5.5. Verifying the Chain of Trust
+### 5.5. Verifying the Chain of Trust
 
 Certificates in the **chain of trust** are signed by a higher authority (except for the **root certificate**) identified by the `issuer`.⁷²ᐟ⁸⁸ The authority will hash the **DER** encoded `TBSCertificate` value and encrypt the hash with the specified encryption algorithm using its own private key, like described in section [**4.7. Digital Signatures**](#4.7.-digital-signatures):⁹⁰ᐟ⁵¹
 
@@ -779,7 +767,7 @@ All certificates in the **chain of trust**, from the **end-entity certificate** 
 
 Therefore the public key of the **end-entity certificate** is not directly used in any verification process.⁷⁶
 
-###5.6. Certificate File Formats and File Extensions
+### 5.6. Certificate File Formats and File Extensions
 
 Certificates and associated keys come in a bunch of different file formats with two different encodings:¹⁰⁸
 
@@ -849,7 +837,7 @@ Possible key and certificate file extensions:¹¹⁴
 
     Mostly PKCS#7 (`.p7b`) and **PKCS #12** (`.p12`/`.pfx`) are used.¹¹⁴ᐟ¹¹⁶
 
-###5.7. Certificate Revocation
+### 5.7. Certificate Revocation
 
 Certificates can be revoked prior to the `notBefore` value of the `validity` field.⁷⁴ᐟ¹¹⁷ᐟ¹¹⁸ Therefore the validity will be checked by clients separately through two different means:
 
@@ -907,7 +895,7 @@ Certificates can be revoked prior to the `notBefore` value of the `validity` fie
     >
     > c. Neither of the Apache and Nginx web servers prefetch an OCSP response, which introduces unnecessary latency in completing the TLS handshake with clients.
 
-###5.8. Certificate Handling by the Client
+### 5.8. Certificate Handling by the Client
 
 To sum up how each X.509 certificate in the chain of trust up to the **root certificate** is handled when received via a TLS **Certificate** message during a TLS handshake, the client (in this case the browser) has to perform the following validation steps:
 
@@ -921,7 +909,7 @@ To sum up how each X.509 certificate in the chain of trust up to the **root cert
 
 If all verification steps succeed, the server is deemed to be trustworthy. The TLS handshake proceeds to establish a secure connection.
 
-###5.9. Certificate Validation Failure
+### 5.9. Certificate Validation Failure
 
 Cases in which the chain of trust is not valid or unfitting for the TLS connection are not specified as *fatal* errors, therefore the client can decide to continue the connection.¹²³
 
@@ -933,9 +921,9 @@ Most browsers will show a warning page encouraging the user to return to *safety
 />
 <p style="text-align: center;">Fig. 8 - Chrome certificate expired warning¹²⁴</p>
 
-##6. TLS 1.2 in Detail
+## 6. TLS 1.2 in Detail
 
-###6.1. TLS 1.2 Full Handshake
+### 6.1. TLS 1.2 Full Handshake
 
 To start a TLS connection a **Full Handshake** is required:¹²⁶
 
@@ -1251,7 +1239,7 @@ Although the messages are shown being separated, they can be sent in coalesced b
 
     Just like the **Finished** message, the **Application Data** may be compressed and is encrypted as shown above, using the negotiated **CipherSpec** and keys from the **key block**.¹⁶⁷
 
-###6.2. TLS 1.2 Abbreviated Handshake
+### 6.2. TLS 1.2 Abbreviated Handshake
 
 The **abbreviated handshake** is used to resume a previous session or duplicate an existing one:¹²⁶
 
@@ -1274,9 +1262,9 @@ The **abbreviated handshake** is used to resume a previous session or duplicate 
 
 > The client sends a **ClientHello** using the Session ID (`session_id`) of the session to be resumed.  The server then checks its session cache for a match. If a match is found, and the server is willing to re-establish the connection under the specified session state, it will send a **ServerHello** with the same Session ID (`session_id`) value.  At this point, both client and server MUST send **ChangeCipherSpec** messages and proceed directly to **Finished** messages.  Once the re-establishment is complete, the client and server MAY begin to exchange application layer data. If a Session ID match is not found, the server generates a new session ID, and the TLS client and server perform a full handshake.¹²⁶
 
-##7. TLS 1.3 in Detail
+## 7. TLS 1.3 in Detail
 
-###7.1. TLS 1.3 Full Handshake
+### 7.1. TLS 1.3 Full Handshake
 
 Again to start a TLS connection a **Full Handshake** is required:¹⁷⁹
 
@@ -1680,7 +1668,7 @@ No different to TLS 1.2, in TLS 1.3 a **Full Handshake** is required to initiall
 
     How often a secret can be used is dependent on the amount of plaintext that can be send safely.²¹⁸ **TLS 1.3 - RFC 8446** therefore references the scientific paper **Limits on Authenticated Encryption Use in TLS**.²¹⁸ᐟ²¹⁹
 
-###7.2. TLS 1.3 Session Resumption and PSK
+### 7.2. TLS 1.3 Session Resumption and PSK
 
 Session tickets can be used to create and resume sessions:²⁸
 
@@ -1754,7 +1742,7 @@ The unique `ticket` value is then used as the identity for the PSK in the `pre_s
 
 > As the server is authenticating via a PSK, it does not send a **Certificate** or a **CertificateVerify** message.  When a client offers resumption via a PSK, it SHOULD also supply a "key_share" extension to the server to allow the server to decline resumption and fall back to a full handshake, if needed.²⁸
 
-###7.3. TLS 1.3 0-RTT Data
+### 7.3. TLS 1.3 0-RTT Data
 
 Using a **PSK** also allows the client to send **zero round-trip time data** (**0-RTT data**) directly after the **ClientHello** message:¹⁸⁷ᐟ¹⁹⁹
 
@@ -1794,7 +1782,7 @@ Using a **PSK** also allows the client to send **zero round-trip time data** (**
 
 The **Application Data** sent after the **ClientHello** message is encrypted using the `client_early_traffic_secret` which is extracted as one of the earliest secrets in the **KDF** sequence depicted in section [section 7.1.](#7.1.-tls-1.3-full-handshake).¹⁹⁹
 
-##8. Getting a Certificate
+## 8. Getting a Certificate
 
 To get an X.509 certificate, at first a **CA** or **RA** has to be selected depending on contract conditions and prices.⁸⁵
 
@@ -1810,7 +1798,7 @@ The **CSR** is uploaded to the CA which uses the **CSR** and other information p
 
 Once the certificate is obtained, the web server TLS settings have to be changed to HTTPS which includes the provision of the acquired certificate or the certificate chain.²²²
 
-##9. HTTP Strict Transport Security (HSTS)
+## 9. HTTP Strict Transport Security (HSTS)
 
 **HTTP Strict Transport Security** (**HSTS**) is a web security policy to enforce that web browsers only use HTTPS when connecting to a specific website.²²⁴ The policy is implemented by the server supplying an `HTTP Strict-Transport-Security response header` in an HTTPS response:²²⁵
 
