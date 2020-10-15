@@ -3,7 +3,7 @@
 <!-- TODOY: Donatation -->
 <!-- TODOY: Contributions -->
 
-How HTTP works, is well, but confusingly spreaded documented in the [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/HTTP). You could also download [this text file](etc/Learning HTTP.txt) that includes all Mozilla HTTP pages (from 4th quarter of 2019) and related ones in an indentation based manner.
+How HTTP works, is well, but confusingly spreaded documented in the [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/HTTP). You could also download [this text file](etc/Learning%20HTTP.txt) that includes all Mozilla HTTP pages (from 4th quarter of 2019) and related ones in an indentation based manner.
 
 <!--- (TODOY: Relativen Link überprüfen) -->
 

