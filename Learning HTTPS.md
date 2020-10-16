@@ -613,15 +613,10 @@ The `issuer` of a certificate identifies a *trusted authority* that signed the c
 
     There is also the concept of **cross certificate**s:⁸⁸ᐟ⁸⁹
 
+    -
+        **Cross certificate**s are **intermediate certificate**s of a **CA** where the `issuer` is another **CA** and the `cA` field of the `BasicConstraints` extension is set `TRUE`.⁷⁶ᐟ⁸⁹
 
-<!-- TODO: Check inline styles -->
-    <div style="padding-left: 30px;">
-
-    **Cross certificate**s are **intermediate certificate**s of a **CA** where the `issuer` is another **CA** and the `cA` field of the `BasicConstraints` extension is set `TRUE`.⁷⁶ᐟ⁸⁹
-
-    They are called **cross certificate**s because each **CA** has its own system for the creation, storage, and distribution of certificates, called a **public key infrastructure** (**PKI**) which is *crossed* when the `issuer` is another **CA**.⁷⁶ᐟ⁸⁹ᐟ⁸⁸
-
-    </div>
+        They are called **cross certificate**s because each **CA** has its own system for the creation, storage, and distribution of certificates, called a **public key infrastructure** (**PKI**) which is *crossed* when the `issuer` is another **CA**.⁷⁶ᐟ⁸⁹ᐟ⁸⁸
 
     Example of an **intermediate certificate** printed with OpenSSL:¹⁰¹
 
