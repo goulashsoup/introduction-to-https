@@ -10,13 +10,63 @@ HTTPS however has just a [brief one paragraph page](https://developer.mozilla.or
 We will explore the depths of hell in 9 sections:
 
 1. [Internet Protocol Recap](#1-internet-protocol-recap)
+
 2. [Browser to Website connection](#2-browser-to-website-connection)
+
 3. [Introduction to HTTPS](#3-introduction-to-https)
+
 4. [Cryptopgraphic Methods](#4-cryptopgraphic-methods)
+
+    4.1. [Introduction to Cryptography](#41-introduction-to-cryptography)
+
+    4.2. [Symmetric Cryptography](#42-symmetric-cryptography)
+
+    4.3 [Asymmetric Cryptography](#43-asymmetric-cryptography)
+
+    4.4. [Diffie-Hellman Exchange](#44-diffie-hellman-exchange)
+
+    4.5. [Message Digests (Hashes)](#45-message-digests-hashes)
+
+    4.6. [Message Authentication Code (MAC)](#46-message-authentication-code-mac)
+
+    4.7. [Digital Signatures](#47-digital-signatures)
+
+    4.8. [Forward Secrecy](#48-forward-secrecy)
+
 5. [X.509 Certificate](#5-x509-certificate)
+
+    5.1. [Introduction to X.509](#51-introduction-to-x509)
+
+    5.2. [Certificate Structure](#52-certificate-structure)
+
+    5.3. [Certificate Signature Structure](#53-certificate-signature-structure)
+
+    5.4. [Verifying the Chain of Trust](#55-verifying-the-chain-of-trust)
+
+    5.5. [Certificate File Formats and File Extensions](#56-certificate-file-formats-and-file-extensions)
+
+    5.7. [Certificate Revocation](#57-certificate-revocation)
+
+    5.8. [Certificate Handling by the Client](#58-certificate-handling-by-the-client)
+
+    5.9. [Certificate Validation Failure](#59-certificate-validation-failure)
+
 6. [TLS 1.2 in Detail](#6-tls-12-in-detail)
+
+    6.1. [TLS 1.2 Full Handshake](#61-tls-12-full-handshake)
+
+    6.2. [TLS 1.2 Abbreviated Handshake](#62-tls-12-abbreviated-handshake)
+
 7. [TLS 1.3 in Detail](#7-tls-13-in-detail)
+
+    7.1. [TLS 1.3 Full Handshake](#71-tls-13-full-handshake)
+
+    7.2. [TLS 1.3 Session Resumption and PSK](#72-tls-13-session-resumption-and-psk)
+
+    7.3. [TLS 1.3 0-RTT Data](#73-tls-13-0-rtt-data)
+
 8. [Getting a Certificate](#8-getting-a-certificate)
+
 9. [HTTP Strict Transport Security (HSTS)](#9-http-strict-transport-security-hsts)
 
 A. [Glossary](#a-glossary)
@@ -125,7 +175,7 @@ Before getting into TLS more detailed, first we have to gain a little knowledge 
 
 ## 4. Cryptopgraphic Methods
 
-### 4.1. Introduction
+### 4.1. Introduction to Cryptography
 
 > In cryptography, **encryption** is the process of **encoding information**. This process converts the original representation of the information, known as **plaintext**, into an alternative form known as **ciphertext**.³⁷
 >
