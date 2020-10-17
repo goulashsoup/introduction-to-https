@@ -5,8 +5,6 @@
 
 How HTTP works, is well, but confusingly spreaded documented in the [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/HTTP). You could also download [this text file](etc/Learning%20HTTP.txt) that includes all Mozilla HTTP pages (from 4th quarter of 2019) and related ones in an indentation based manner.
 
-<!--- (TODOY: Relativen Link überprüfen) -->
-
 HTTPS however has just a [brief one paragraph page](https://developer.mozilla.org/en-US/docs/Glossary/https) simply because it dives into a completely different sphere of technologies very unrelated to the well known web technologies like HTML, CSS, JS etc.
 
 We will explore the depths of hell in 9 sections:
@@ -339,7 +337,7 @@ With the assumption that the server will not change the public-private key pair,
 
 Now let's assume the server would create a new public-private key pair for each client/session and makes sure that past key pairs are completely removed from any memory. Now, if one private key gets revealed by an attacker, past sessions can not get encrypted because the corresponding private key is long gone, the attacker would of course be able to save the public key send to the client. This encryption system would be **forward secure** because the necessary encryption attributes of past sessions do not exist anymore.
 
-The encryption system provided in the example is not used in TLS 1.2 and TLS 1.3. The only **forward secure** encryption systems that are used in TLS 1.2 and TLS 1.3 are **DHE** and **ECDHE**: As shown in [section 4.4.](#4.4.-diffie-hellman-exchange), for **DHE**, both peers share a new **DH public key** for each session, but because each of the **DH public key**s has a corresponding **private key**, an attacker is not able to resolve the **shared secret** which is used to encrypt the session. Even if an attacker gets hold of one **shared secret**, past sessions are not compromised because they used a different **shared secret**.
+The encryption system provided in the example is not used in TLS 1.2 and TLS 1.3. The only **forward secure** encryption systems that are used in TLS 1.2 and TLS 1.3 are **DHE** and **ECDHE**: As shown in [section 4.4.](#44-diffie-hellman-exchange), for **DHE**, both peers share a new **DH public key** for each session, but because each of the **DH public key**s has a corresponding **private key**, an attacker is not able to resolve the **shared secret** which is used to encrypt the session. Even if an attacker gets hold of one **shared secret**, past sessions are not compromised because they used a different **shared secret**.
 
 There is the concept of session resumption in both TLS 1.2 and TLS 1.3.¹²⁶ᐟ²⁸ In TLS 1.2, the encryption attributes do not change when a session is resumed.¹²⁶ In TLS 1.3, session resumption may include a so called **pre shared key** (**PSK**) that is send in the initial handshake, but because the message that includes the **PSK** is encrypted with the same encryption attributes for the application data of the initial session, it really doesn't enforce any more security, just an extra step to calculate the session keys.²²⁰ᐟ²⁸ Therefore in both TLS 1.2 and 1.3, resumed sessions really can be seen as belonging to the initial session.
 
@@ -466,7 +464,7 @@ The `TBSCertificate`'s most import fields are the following:⁵⁹
 
 - `issuer`:
 
-    A **DN** identifying the **trusted authority** that digitally signed the certificate.⁷² **Trusted authorities** are explained in [section 5.4.](#5.4.-certificate-chain).
+    A **DN** identifying the **trusted authority** that digitally signed the certificate.⁷² **Trusted authorities** are explained in [section 5.4.](#54-certificate-chain).
 
 - `validity`:
 
@@ -511,7 +509,7 @@ The `TBSCertificate`'s most import fields are the following:⁵⁹
 
     - `BasicConstraints`:
 
-        The `BasicConstraints` extension identifies whether the subject of the certificate is a so called **certificate authority** (**CA**), an organisation that is allowed to sign certificates to users and other organisations.⁸¹ᐟ⁸²ᐟ⁷⁶ It also specifies the maximum number of non-self-issued **intermediate certificate**s that may follow this certificate in a valid certification path.⁸¹ You will learn about **CA**s and **intermediate certificate**s in [section 5.4](#5.4-certificate-chain).
+        The `BasicConstraints` extension identifies whether the subject of the certificate is a so called **certificate authority** (**CA**), an organisation that is allowed to sign certificates to users and other organisations.⁸¹ᐟ⁸²ᐟ⁷⁶ It also specifies the maximum number of non-self-issued **intermediate certificate**s that may follow this certificate in a valid certification path.⁸¹ You will learn about **CA**s and **intermediate certificate**s in [section 5.4](#54-certificate-chain).
 
           BasicConstraints ::= SEQUENCE {
                cA                      BOOLEAN DEFAULT FALSE,
@@ -737,7 +735,7 @@ The `issuer` of a certificate identifies a *trusted authority* that signed the c
 
 ### 5.5. Verifying the Chain of Trust
 
-Certificates in the **chain of trust** are signed by a higher authority (except for the **root certificate**) identified by the `issuer`.⁷²ᐟ⁸⁸ The authority will hash the **DER** encoded `TBSCertificate` value and encrypt the hash with the specified encryption algorithm using its own private key, like described in section [**4.7. Digital Signatures**](#4.7.-digital-signatures):⁹⁰ᐟ⁵¹
+Certificates in the **chain of trust** are signed by a higher authority (except for the **root certificate**) identified by the `issuer`.⁷²ᐟ⁸⁸ The authority will hash the **DER** encoded `TBSCertificate` value and encrypt the hash with the specified encryption algorithm using its own private key, like described in section [**4.7. Digital Signatures**](#47-digital-signatures):⁹⁰ᐟ⁵¹
 
     digest = hash(encodedTbsCertValue);
     signature = encrypt(digest, issuer_private_key);
@@ -863,7 +861,7 @@ Certificates can be revoked prior to the `notBefore` value of the `validity` fie
 
     It is a significant cost for the **CA** to provide responses to every client of a given certificate in real time.²⁴¹ *There are cases where OCSP requests for a single high-traffic site caused significant network problems for the issuing CA.* ²⁴¹
 
-    The TLS **Certificate Status Request** extension addressed this issue partially by providing clients the possibility to send the **OCSP request** via a `status_request` extension in its **ClientHello** message in TLS 1.2 (see [section 6.1](#6.1-tls-1.2-full-handshake)) directly to the server in question.²⁴²ᐟ²⁴³ The server may then provide a copy of a previously acquired **OCSP response** in a TLS **CertificateStatus** message immediately after the **Certificate** message.²⁴³ᐟ²⁴¹ TLS 1.3 also uses the **Certificate Status Request** extension but sends it differently, which is described in one of the paragraphs below.²¹²
+    The TLS **Certificate Status Request** extension addressed this issue partially by providing clients the possibility to send the **OCSP request** via a `status_request` extension in its **ClientHello** message in TLS 1.2 (see [section 6.1](#61-tls-12-full-handshake)) directly to the server in question.²⁴²ᐟ²⁴³ The server may then provide a copy of a previously acquired **OCSP response** in a TLS **CertificateStatus** message immediately after the **Certificate** message.²⁴³ᐟ²⁴¹ TLS 1.3 also uses the **Certificate Status Request** extension but sends it differently, which is described in one of the paragraphs below.²¹²
 
     > While it may appear that allowing the site operator to control verification responses would allow a fraudulent site to issue false verification for a revoked certificate, the stapled responses can't be forged...²¹³
 
@@ -895,7 +893,7 @@ To sum up how each X.509 certificate in the chain of trust up to the **root cert
 
 3. Validate requested OCSP response and corresponding certificate status of the **certificate**. Either the OCSP response was received via **CertificateStatus** message or by accessing the responder URI specified in the certificate's `AuthorityInfoAccess` extension field.
 
-4. Validate the certificate's signature as described in  [section 5.5.](#5.5.-verifying-the-chain-of-trust).
+4. Validate the certificate's signature as described in  [section 5.5.](#55-verifying-the-chain-of-trust).
 
 If all verification steps succeed, the server is deemed to be trustworthy. The TLS handshake proceeds to establish a secure connection.
 
@@ -990,7 +988,7 @@ Although the messages are shown being separated, they can be sent in coalesced b
 
     The client may also request one or more OCSP responses for the certificates of the server using either the `status_request` or the `status_request_v2` extension.²⁴⁶ᐟ²⁴³
 
-    The **ClientHello** as well as the **ServerHello** also include a `session_id` which can be used to resume a session in an **Abbreviated Handshake**, see [section 6.2.](#6.2.-tls-1.2-abbreviated-handshake).¹²⁹ᐟ¹²⁶ᐟ¹³⁶
+    The **ClientHello** as well as the **ServerHello** also include a `session_id` which can be used to resume a session in an **Abbreviated Handshake**, see [section 6.2.](#62-tls-12-abbreviated-handshake).¹²⁹ᐟ¹²⁶ᐟ¹³⁶
 
 2. Server **Certificate** + **CertificateStatus**:¹²⁶ᐟ¹³⁹ᐟ²⁴⁶ᐟ²⁴³
 
@@ -1000,7 +998,7 @@ Although the messages are shown being separated, they can be sent in coalesced b
 
     If the 2. part is `_anon` or `_NULL`, no *public-key cryptosystem* is used and the server doesn't need to send a **Certificate** message.¹³⁹ᐟ¹⁴⁴
 
-    Depending on the **key exchange algorithm** and the `cached_info` extension value of the **ClientHello** message, the server will provide the chain of **X.509 certificate**s, as described in [section 5.4. Certificate Chain](#5.4.-certificate-chain), in a **Certificate** message.¹³⁹ᐟ¹⁴⁵
+    Depending on the **key exchange algorithm** and the `cached_info` extension value of the **ClientHello** message, the server will provide the chain of **X.509 certificate**s, as described in [section 5.4. Certificate Chain](#54-certificate-chain), in a **Certificate** message.¹³⁹ᐟ¹⁴⁵
 
     The certificates must be in correct order starting with the servers own **end-entity certificate** and ending with the last **intermediate certificate** or optionally the **root certificate**, so that each following certificate certifies the previous one.¹³⁹ The **end-entity certificate** necessarily includes a **public key** of a public-private key pair where the **private key** belongs to the server.¹³⁹
 
@@ -1026,7 +1024,7 @@ Although the messages are shown being separated, they can be sent in coalesced b
 
         As already mentioned, most **key exchange algorithm**s are two-parted where the 1. part really denotes the **key exchange algorithm** while the 2. part just specifies the **public-key cryptosystem**.¹³⁹
 
-        For **key exchange algorithm** using the `_RSA` or `_DSS` *public-key cryptosystem*, the server will sign the **ServerKeyExchange** using the servers private key belonging to the **end-entity certificate**.¹⁴⁰ᐟ¹⁴⁶ The client should verify the signature using the **end-entity certificate**s public key as described in [section 5.5. Verifying the Chain of Trust](#5.5.-verifying-the-chain-of-trust).⁷⁰ᐟ⁸⁸
+        For **key exchange algorithm** using the `_RSA` or `_DSS` *public-key cryptosystem*, the server will sign the **ServerKeyExchange** using the servers private key belonging to the **end-entity certificate**.¹⁴⁰ᐟ¹⁴⁶ The client should verify the signature using the **end-entity certificate**s public key as described in [section 5.5. Verifying the Chain of Trust](#55-verifying-the-chain-of-trust).⁷⁰ᐟ⁸⁸
 
         We explore the process for the defined key exchange algorithms:
 
@@ -1114,9 +1112,9 @@ Although the messages are shown being separated, they can be sent in coalesced b
 
     The server denotes that its finished sending the **ServerHello** and associated messages.¹²⁶ It is not mentioned further when examining the different key exchange algorithms.
 
-    After receiving the **ServerHelloDone** message, the client should verify the servers certificate chain as described in [section 5.8. Certificate Handling by the Client](#5.8.-certificate-handling-by-the-client).⁷⁰
+    After receiving the **ServerHelloDone** message, the client should verify the servers certificate chain as described in [section 5.8. Certificate Handling by the Client](#58-certificate-handling-by-the-client).⁷⁰
 
-    As already explained in [section 5.9. Certificate Verification Failure](#5.9.-certificate-verification-failure), cases in which the certificate is not valid or unfitting for the TLS connection are not specified as *fatal* errors, therefore the client may decide to continue the connection.¹²³ This includes the following **error alerts**:¹²³
+    As already explained in [section 5.9. Certificate Verification Failure](#59-certificate-validation-failure), cases in which the certificate is not valid or unfitting for the TLS connection are not specified as *fatal* errors, therefore the client may decide to continue the connection.¹²³ This includes the following **error alerts**:¹²³
 
     - `bad_certificate` => A certificate is corrupt, contains signatures that did not verify correctly, etc.¹²³
 
@@ -1716,7 +1714,7 @@ After the initial handshake is completed, the server can send the client a **New
         Extension extensions<0..2^16-2>;
     } NewSessionTicket;
 
-The `ticket_nonce` is a unique value across all tickets.²²⁰ After receiving the **NewSessionTicket** message, the PSK can be computed using the `ticket_nonce` and the `resumption_master_secret` (see [section 7.1. TLS 1.3 Full Handshake - 1.](#7.1.-tls-1.3-full-handshake)) as a parameter for the `HKDF-Expand-Label` function:²²⁰
+The `ticket_nonce` is a unique value across all tickets.²²⁰ After receiving the **NewSessionTicket** message, the PSK can be computed using the `ticket_nonce` and the `resumption_master_secret` (see [section 7.1. TLS 1.3 Full Handshake - 1.](#71-tls-13-full-handshake)) as a parameter for the `HKDF-Expand-Label` function:²²⁰
 
     PSK = HKDF-Expand-Label(
         resumption_master_secret,
@@ -1769,7 +1767,7 @@ Using a **PSK** also allows the client to send **zero round-trip time data** (**
           [] Indicates messages protected using keys
              derived from [sender]_application_traffic_secret_N.
 
-The **Application Data** sent after the **ClientHello** message is encrypted using the `client_early_traffic_secret` which is extracted as one of the earliest secrets in the **KDF** sequence depicted in section [section 7.1.](#7.1.-tls-1.3-full-handshake).¹⁹⁹
+The **Application Data** sent after the **ClientHello** message is encrypted using the `client_early_traffic_secret` which is extracted as one of the earliest secrets in the **KDF** sequence depicted in section [section 7.1.](#71-tls-13-full-handshake).¹⁹⁹
 
 ## 8. Getting a Certificate
 
@@ -2637,5 +2635,3 @@ URL - Uniform Resource Locator
 - [zytrax - Survival Guide - Encryption, Authentication](https://www.zytrax.com/tech/survival/encryption.html)
 
 - [zytrax - Survival guides - TLS/SSL and SSL (X.509) Certificates](https://www.zytrax.com/tech/survival/ssl.html)
-
-<!-- TODOY: anchor überprüfen -->
