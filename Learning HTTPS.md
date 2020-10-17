@@ -1,4 +1,4 @@
-# *Short* Introduction to HTTPS, TLS and TLS certificates
+# Introduction to HTTPS, TLS and X.509 certificates
 
 <!-- TODOY: Donatation -->
 <!-- TODOY: Contributions -->
