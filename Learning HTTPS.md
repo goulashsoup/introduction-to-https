@@ -73,6 +73,8 @@ A. [Glossary](#a-glossary)
 B. [Sources](#b-sources)
 C. [References](#c-references)
 
+---
+
 ## 1. Internet Protocol Recap
 
 Like you probably already know, data sent over the Internet means that the data is encapsulated in a packet of some protocol which is again encapsulated in a packet of some protocol until we reach the topmost layer. The Internet Protocol Suite has 4 layers of protocols.² Here is a list of the layers (from topmost to lowest) together with some protocols of interest for us:
@@ -102,6 +104,8 @@ In the above Example an...
 For the Internet to work, the IP layer is important. Devices are identified by IP addresses that are set as the IP packet destination in the IP header. The packet is send from your device to a router and from their on from router to router until it reaches the requested destination (if it exists).³ The only interesting thing to note is, that there are two IP protocols in use, IPv4 and IPv6, which is referred to as dual-stack IP implementation.⁴ IPv6 was mainly developed because IPv4 addresses are only allowed to be 32 bit long which results in 4,294,967,296 unique addresses and this is by far not enough for more then nearly 8 billion people on earth.⁵ᐟ⁶
 
 Now we take a look at what happens when a website is called in a browser...
+
+---
 
 ## 2. Browser to Website connection
 
@@ -141,6 +145,8 @@ When a web address, which is a Uniform Resource Locator (URL) (e.g. `https://en.
 
 Now we have a brief understanding of what happens with HTTP. Of course the process can differ in many ways e.g. when the website got called before, the DNS query is not necessary because the browser cached the IP address.¹⁸ For HTTPS things will get terrifyingly complicated.
 
+---
+
 ## 3. Introduction to HTTPS
 
 > Hypertext Transfer Protocol Secure (HTTPS) is an extension of the Hypertext Transfer Protocol (HTTP).¹
@@ -172,6 +178,8 @@ Because the connection establishment is generic, from now on we call the browser
 6. A connection is closed with an `Alert` message of specific type in both TLS 1.2 and 1.3.³⁵ᐟ³⁶ At that time, the client will already have saved some necessary informaton to re-establish the connection with an **Abbreviated Handshake** in TLS 1.2 and a **Session Resumption** in TLS 1.3.²⁸ᐟ²⁹
 
 Before getting into TLS more detailed, first we have to gain a little knowledge about the cryptographic methods used.
+
+---
 
 ## 4. Cryptopgraphic Methods
 
@@ -390,6 +398,8 @@ Now let's assume the server would create a new public-private key pair for each 
 The encryption system provided in the example is not used in TLS 1.2 and TLS 1.3. The only **forward secure** encryption systems that are used in TLS 1.2 and TLS 1.3 are **DHE** and **ECDHE**: As shown in [section 4.4.](#44-diffie-hellman-exchange), for **DHE**, both peers share a new **DH public key** for each session, but because each of the **DH public key**s has a corresponding **private key**, an attacker is not able to resolve the **shared secret** which is used to encrypt the session. Even if an attacker gets hold of one **shared secret**, past sessions are not compromised because they used a different **shared secret**.
 
 There is the concept of session resumption in both TLS 1.2 and TLS 1.3.¹²⁶ᐟ²⁸ In TLS 1.2, the encryption attributes do not change when a session is resumed.¹²⁶ In TLS 1.3, session resumption may include a so called **pre shared key** (**PSK**) that is send in the initial handshake, but because the message that includes the **PSK** is encrypted with the same encryption attributes for the application data of the initial session, it really doesn't enforce any more security, just an extra step to calculate the session keys.²²⁰ᐟ²⁸ Therefore in both TLS 1.2 and 1.3, resumed sessions really can be seen as belonging to the initial session.
+
+---
 
 ## 5. X.509 Certificate
 
@@ -958,6 +968,8 @@ Most browsers will show a warning page encouraging the user to return to *safety
 </p>
 <p align="center">Fig. 8 - Chrome certificate expired warning¹²⁴</p>
 
+---
+
 ## 6. TLS 1.2 in Detail
 
 ### 6.1. TLS 1.2 Full Handshake
@@ -1298,6 +1310,8 @@ The **abbreviated handshake** is used to resume a previous session or duplicate 
        necessary nonetheless.      
 
 > The client sends a **ClientHello** using the Session ID (`session_id`) of the session to be resumed.  The server then checks its session cache for a match. If a match is found, and the server is willing to re-establish the connection under the specified session state, it will send a **ServerHello** with the same Session ID (`session_id`) value.  At this point, both client and server MUST send **ChangeCipherSpec** messages and proceed directly to **Finished** messages.  Once the re-establishment is complete, the client and server MAY begin to exchange application layer data. If a Session ID match is not found, the server generates a new session ID, and the TLS client and server perform a full handshake.¹²⁶
+
+---
 
 ## 7. TLS 1.3 in Detail
 
@@ -1819,6 +1833,8 @@ Using a **PSK** also allows the client to send **zero round-trip time data** (**
 
 The **Application Data** sent after the **ClientHello** message is encrypted using the `client_early_traffic_secret` which is extracted as one of the earliest secrets in the **KDF** sequence depicted in section [section 7.1.](#71-tls-13-full-handshake).¹⁹⁹
 
+---
+
 ## 8. Getting a Certificate
 
 To get an X.509 certificate, at first a **CA** or **RA** has to be selected depending on contract conditions and prices.⁸⁵
@@ -1834,6 +1850,8 @@ The user is then required to generate a set of asymmetric keys and *use the priv
 The **CSR** is uploaded to the CA which uses the **CSR** and other information provided to create the user's X.509 certificate which typically has a validity period ranging from 1 to 3 years.⁸⁵ The end-entity certificate is signed with the private key corresponding to the CA's root certificate.⁸⁵ *The X.509 certificate is sent to the user using a variety of processes (FTP/HTTP/EMAIL)*.⁸⁵
 
 Once the certificate is obtained, the web server TLS settings have to be changed to HTTPS which includes the provision of the acquired certificate or the certificate chain.²²²
+
+---
 
 ## 9. HTTP Strict Transport Security (HSTS)
 
