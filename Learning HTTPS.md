@@ -1,8 +1,5 @@
 # Introduction to HTTPS, TLS and X.509 certificates
 
-<!-- TODOY: Donatation -->
-<!-- TODOY: Contributions -->
-
 How HTTP works, is well, but confusingly spreaded documented in the [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/HTTP). You could also download [this text file](etc/Learning%20HTTP.txt) that includes all Mozilla HTTP pages (from 4th quarter of 2019) and related ones in an indentation based manner.
 
 HTTPS however has just a [brief one paragraph page](https://developer.mozilla.org/en-US/docs/Glossary/https) simply because it dives into a completely different sphere of technologies very unrelated to the well known web technologies like HTML, CSS, JS etc.
@@ -68,8 +65,6 @@ We will explore the depths of hell in 9 sections:
 8. [Getting a Certificate](#8-getting-a-certificate)
 
 9. [HTTP Strict Transport Security (HSTS)](#9-http-strict-transport-security-hsts)
-
-<!-- [this text file](etc/Learning%20HTTP.txt) -->
 
 A. [Glossary](etc/Glossary.md)<br>
 B. [Sources](etc/Sources.md)<br>
@@ -407,7 +402,7 @@ There is the concept of session resumption in both TLS 1.2 and TLS 1.3.¹²⁶�
 
 ### 5.1. Introduction to X.509
 
-**X.509** is the standard defining the format of public key certificates used for TLS.⁵² **X.509** certificates are sent by the server in a TLS **Certificate** message.²⁴ The procedure of handling **X.509** certificates is basically the same in both TLS 1.2 and 1.3, just the usage of keys differs.⁵³ᐟ⁵⁴ Certificates are used to verify the relation between the certificate and its owner and also to encrypt/sign specific TLS messages.⁵²ᐟ⁵⁵ᐟ⁵⁶
+**X.509** is the standard defining the format of public key certificates used for TLS.⁸⁴ **X.509** certificates are sent by the server in a TLS **Certificate** message.²⁴ The procedure of handling **X.509** certificates is basically the same in both TLS 1.2 and 1.3, just the usage of keys differs.⁵³ᐟ⁵⁴ Certificates are used to verify the relation between the certificate and its owner and also to encrypt/sign specific TLS messages.⁵²ᐟ⁵⁵ᐟ⁵⁶
 
 > An **X.509** certificate is an **ASN.1** (X.680) structure encoded using the **Distinguished Encoding Rules** (**DER**) of X.690...⁵⁷
 
@@ -678,7 +673,7 @@ The `issuer` of a certificate identifies a *trusted authority* that signed the c
 
         They are called **cross certificate**s because each **CA** has its own system for the creation, storage, and distribution of certificates, called a **public key infrastructure** (**PKI**) which is *crossed* when the `issuer` is another **CA**.⁷⁶ᐟ⁸⁹ᐟ⁸⁸
 
-    Example of an **intermediate certificate** printed with OpenSSL:¹⁰¹
+    Example of an **intermediate certificate** printed with OpenSSL:¹⁰⁰ᐟ¹⁰¹
 
     >     Certificate:
     >         Data:
@@ -740,7 +735,7 @@ The `issuer` of a certificate identifies a *trusted authority* that signed the c
 
     Because **end-entity certificate**s are the lowest certificates in the **chain of trust**, they are also called **leaf certificate**s.⁷⁶
 
-    Example of an **end-entity certificate** printed with OpenSSL:⁹
+    Example of an **end-entity certificate** printed with OpenSSL:⁵²ᐟ¹⁰⁰
 
     >     Certificate:
     >         Data:
@@ -1017,7 +1012,7 @@ Although the messages are shown being separated, they can be sent in coalesced b
 
     The **Full Handshake** starts with the Client sending a **ClientHello** message to the server which includes most importantly the supported security attributes the server can choose from to secure data in the **Application Data** message phase:¹²⁶ᐟ¹²⁹
 
-    1. **Cipher Suite**:¹²⁹
+    1. `Cipher Suite`:¹²⁹
 
         The **ClientHello** includes a list of **cipher suites** in preferred order.¹²⁹ A **cipher suite** is a 2 byte ID value, notated as a pair of hexadecimal numbers, for a set of algorithms used for securing that specific TLS session.¹²⁶ᐟ¹²⁹ᐟ¹³¹ᐟ¹³²ᐟ¹⁷⁸
 
@@ -1038,11 +1033,11 @@ Although the messages are shown being separated, they can be sent in coalesced b
 
         The server will select and set one of the provided **ClientHello** **cipher suite**s in its **ServerHello** message.¹³⁶ If it can not find a match it will respond with a `handshake_failure` **Alert** message, hence the **Full Handshake** can not proceed.¹³⁶ᐟ¹²³
 
-    2. **Compression Method**:¹²⁹
+    2. `Compression Method`:¹²⁹
 
         The **ClientHello** includes a list of supported compression methods.¹²⁹ TLS 1.2 - RFC 5246 does not specify how a server should select a compression method, just that it sets the selected one in the **ServerHello** message.¹³⁶
 
-    3. **Signature Algorithm**:¹³⁶ᐟ¹³⁸
+    3. `Signature Algorithm`:¹³⁶ᐟ¹³⁸
 
         The **ClientHello** may contain a `signature_algorithms` extension to indicate to the server which signature/hash algorithm pairs must be used in digital signatures.¹³⁶ᐟ¹³⁸ This regards the signatures of all X.509 certificates in the certificate chain sent via the **Certificate** message by the server as well as the signature in the **ServerKeyExchange** message.¹³⁹ᐟ¹⁴⁰
 
