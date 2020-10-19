@@ -101,3 +101,9 @@ As a human being i will have made and will make a lot of mistakes of all kinds. 
 ## Contact
 
 On my [profile page](github.com/goulashsoup) you'll find a mail address as a logged in github user.
+
+## License & Copyright
+
+The materials herein are all &copy; 2020 goulashsoup (Github user).
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/"><img alt="Creative Commons Licence" style="border-width:0" src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0 International License</a>.
