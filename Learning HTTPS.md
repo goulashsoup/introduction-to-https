@@ -271,7 +271,7 @@ Summary:
 
 4. Now peer 1 and peer 2 are holding each others **pre-master secret** and can calculate the **shared secret** `Y`...⁴⁴
 
-       Y = xₓ^sᵥ mod p
+       Y = x^s mod p
 
     ...without each other:⁴⁴
 
