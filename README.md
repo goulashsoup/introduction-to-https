@@ -4,8 +4,6 @@ In this repo you'll find an introduction to the **Hypertext Transfer Protocol Se
 
 ## Table of Contents
 
-https://github.com/goulashsoup/introduction-to-https/blob/main/Learning%20HTTPS.md#73-tls-13-0-rtt-data
-
 [Main document page](https://github.com/goulashsoup/introduction-to-https/blob/main/Learning%20HTTPS.md)
 
 1. [Internet Protocol Recap](https://github.com/goulashsoup/introduction-to-https/blob/main/Learning%20HTTPS.md#1-internet-protocol-recap)
