@@ -70,15 +70,15 @@ https://github.com/goulashsoup/introduction-to-https/blob/main/Learning%20HTTPS.
 
 There is also a glossary:
 
-A. [Glossary](etc/Glossary.md)
+A. [Glossary](https://github.com/goulashsoup/introduction-to-https/blob/main/etc/Glossary.md)
 
 The sources are specific references (HTML anchors) to the sections of the source material, which are identified by superscript UTF-8 numbers (`⁰¹²³⁴⁵⁶⁷⁸⁹`). If one sentence has multiple sources for the information provided, they are separated by `ᐟ`. So e.g. ¹⁵³ᐟ²⁸ references source number 153 and 28 in the "Sources" markdown file:
 
-B. [Sources](etc/Sources.md)
+B. [Sources](https://github.com/goulashsoup/introduction-to-https/blob/main/etc/Sources.md)
 
 The "References" contains each used source material once without anchors:
 
-C. [References](etc/References.md)
+C. [References](https://github.com/goulashsoup/introduction-to-https/blob/main/etc/References.md)
 
 ## Acknowledgement
 
