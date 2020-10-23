@@ -1,4 +1,4 @@
-to-https/blob/main/# Introduction to HTTPS, TLS and X.509 certificates
+# Introduction to HTTPS, TLS and X.509 certificates
 
 In this repo you'll find an introduction to the **Hypertext Transfer Protocol Secure** (**HTTPS**). To make it very simple, **HTTPS** is nothing more then **HTTP** send encrypted using a version of the **Transport Layer Security** (**TLS**) protocol. Therefore there is a brief introduction into the latest 2 versions - TLS 1.2 and 1.3. In the process of TLS communication, **X.509** certificates are used to validate the server and optionally the client as well. Therefore there is a section about **X.509** certificates as well.
 
