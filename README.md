@@ -1,70 +1,72 @@
-# Introduction to HTTPS, TLS and X.509 certificates
+to-https/blob/main/# Introduction to HTTPS, TLS and X.509 certificates
 
 In this repo you'll find an introduction to the **Hypertext Transfer Protocol Secure** (**HTTPS**). To make it very simple, **HTTPS** is nothing more then **HTTP** send encrypted using a version of the **Transport Layer Security** (**TLS**) protocol. Therefore there is a brief introduction into the latest 2 versions - TLS 1.2 and 1.3. In the process of TLS communication, **X.509** certificates are used to validate the server and optionally the client as well. Therefore there is a section about **X.509** certificates as well.
 
 ## Table of Contents
 
-[Main document page](/Learning%20HTTPS.md)
+https://github.com/goulashsoup/introduction-to-https/blob/main/Learning%20HTTPS.md#73-tls-13-0-rtt-data
 
-1. [Internet Protocol Recap](/Learning%20HTTPS.md#1-internet-protocol-recap)
+[Main document page](https://github.com/goulashsoup/introduction-to-https/blob/main/Learning%20HTTPS.md)
 
-2. [Browser to Website connection](/Learning%20HTTPS.md#2-browser-to-website-connection)
+1. [Internet Protocol Recap](https://github.com/goulashsoup/introduction-to-https/blob/main/Learning%20HTTPS.md#1-internet-protocol-recap)
 
-3. [Introduction to HTTPS](/Learning%20HTTPS.md#3-introduction-to-https)
+2. [Browser to Website connection](https://github.com/goulashsoup/introduction-to-https/blob/main/Learning%20HTTPS.md#2-browser-to-website-connection)
 
-4. [Cryptopgraphic Methods](/Learning%20HTTPS.md#4-cryptopgraphic-methods)
+3. [Introduction to HTTPS](https://github.com/goulashsoup/introduction-to-https/blob/main/Learning%20HTTPS.md#3-introduction-to-https)
+
+4. [Cryptopgraphic Methods](https://github.com/goulashsoup/introduction-to-https/blob/main/Learning%20HTTPS.md#4-cryptopgraphic-methods)
 
     4.1. [Introduction to Cryptography](/Learning%20HTTPS.md#41-introduction-to-cryptography)
 
-    4.2. [Symmetric Cryptography](/Learning%20HTTPS.md#42-symmetric-cryptography)
+    4.2. [Symmetric Cryptography](https://github.com/goulashsoup/introduction-to-https/blob/main/Learning%20HTTPS.md#42-symmetric-cryptography)
 
-    4.3 [Asymmetric Cryptography](/Learning%20HTTPS.md#43-asymmetric-cryptography)
+    4.3 [Asymmetric Cryptography](https://github.com/goulashsoup/introduction-to-https/blob/main/Learning%20HTTPS.md#43-asymmetric-cryptography)
 
-    4.4. [Diffie-Hellman Exchange](/Learning%20HTTPS.md#44-diffie-hellman-exchange)
+    4.4. [Diffie-Hellman Exchange](https://github.com/goulashsoup/introduction-to-https/blob/main/Learning%20HTTPS.md#44-diffie-hellman-exchange)
 
-    4.5. [Message Digests (Hashes)](/Learning%20HTTPS.md#45-message-digests-hashes)
+    4.5. [Message Digests (Hashes)](https://github.com/goulashsoup/introduction-to-https/blob/main/Learning%20HTTPS.md#45-message-digests-hashes)
 
-    4.6. [Message Authentication Code (MAC)](/Learning%20HTTPS.md#46-message-authentication-code-mac)
+    4.6. [Message Authentication Code (MAC)](https://github.com/goulashsoup/introduction-to-https/blob/main/Learning%20HTTPS.md#46-message-authentication-code-mac)
 
-    4.7. [Digital Signatures](/Learning%20HTTPS.md#47-digital-signatures)
+    4.7. [Digital Signatures](https://github.com/goulashsoup/introduction-to-https/blob/main/Learning%20HTTPS.md#47-digital-signatures)
 
-    4.8. [Forward Secrecy](/Learning%20HTTPS.md#48-forward-secrecy)
+    4.8. [Forward Secrecy](https://github.com/goulashsoup/introduction-to-https/blob/main/Learning%20HTTPS.md#48-forward-secrecy)
 
-5. [X.509 Certificate](/Learning%20HTTPS.md#5-x509-certificate)
+5. [X.509 Certificate](https://github.com/goulashsoup/introduction-to-https/blob/main/Learning%20HTTPS.md#5-x509-certificate)
 
-    5.1. [Introduction to X.509](/Learning%20HTTPS.md#51-introduction-to-x509)
+    5.1. [Introduction to X.509](https://github.com/goulashsoup/introduction-to-https/blob/main/Learning%20HTTPS.md#51-introduction-to-x509)
 
-    5.2. [Certificate Structure](/Learning%20HTTPS.md#52-certificate-structure)
+    5.2. [Certificate Structure](https://github.com/goulashsoup/introduction-to-https/blob/main/Learning%20HTTPS.md#52-certificate-structure)
 
-    5.3. [Certificate Signature Structure](/Learning%20HTTPS.md#53-certificate-signature-structure)
+    5.3. [Certificate Signature Structure](https://github.com/goulashsoup/introduction-to-https/blob/main/Learning%20HTTPS.md#53-certificate-signature-structure)
 
-    5.4. [Verifying the Chain of Trust](/Learning%20HTTPS.md#55-verifying-the-chain-of-trust)
+    5.4. [Verifying the Chain of Trust](https://github.com/goulashsoup/introduction-to-https/blob/main/Learning%20HTTPS.md#55-verifying-the-chain-of-trust)
 
-    5.5. [Certificate File Formats and File Extensions](/Learning%20HTTPS.md#56-certificate-file-formats-and-file-extensions)
+    5.5. [Certificate File Formats and File Extensions](https://github.com/goulashsoup/introduction-to-https/blob/main/Learning%20HTTPS.md#56-certificate-file-formats-and-file-extensions)
 
-    5.7. [Certificate Revocation](/Learning%20HTTPS.md#57-certificate-revocation)
+    5.7. [Certificate Revocation](https://github.com/goulashsoup/introduction-to-https/blob/main/Learning%20HTTPS.md#57-certificate-revocation)
 
-    5.8. [Certificate Handling by the Client](/Learning%20HTTPS.md#58-certificate-handling-by-the-client)
+    5.8. [Certificate Handling by the Client](https://github.com/goulashsoup/introduction-to-https/blob/main/Learning%20HTTPS.md#58-certificate-handling-by-the-client)
 
-    5.9. [Certificate Validation Failure](/Learning%20HTTPS.md#59-certificate-validation-failure)
+    5.9. [Certificate Validation Failure](https://github.com/goulashsoup/introduction-to-https/blob/main/Learning%20HTTPS.md#59-certificate-validation-failure)
 
-6. [TLS 1.2 in Detail](/Learning%20HTTPS.md#6-tls-12-in-detail)
+6. [TLS 1.2 in Detail](https://github.com/goulashsoup/introduction-to-https/blob/main/Learning%20HTTPS.md#6-tls-12-in-detail)
 
-    6.1. [TLS 1.2 Full Handshake](/Learning%20HTTPS.md#61-tls-12-full-handshake)
+    6.1. [TLS 1.2 Full Handshake](https://github.com/goulashsoup/introduction-to-https/blob/main//Learning%20HTTPS.md#61-tls-12-full-handshake)
 
-    6.2. [TLS 1.2 Abbreviated Handshake](/Learning%20HTTPS.md#62-tls-12-abbreviated-handshake)
+    6.2. [TLS 1.2 Abbreviated Handshake](https://github.com/goulashsoup/introduction-to-https/blob/main/Learning%20HTTPS.md#62-tls-12-abbreviated-handshake)
 
-7. [TLS 1.3 in Detail](/Learning%20HTTPS.md#7-tls-13-in-detail)
+7. [TLS 1.3 in Detail](https://github.com/goulashsoup/introduction-to-https/blob/main/Learning%20HTTPS.md#7-tls-13-in-detail)
 
-    7.1. [TLS 1.3 Full Handshake](/Learning%20HTTPS.md#71-tls-13-full-handshake)
+    7.1. [TLS 1.3 Full Handshake](https://github.com/goulashsoup/introduction-to-https/blob/main/Learning%20HTTPS.md#71-tls-13-full-handshake)
 
-    7.2. [TLS 1.3 Session Resumption and PSK](/Learning%20HTTPS.md#72-tls-13-session-resumption-and-psk)
+    7.2. [TLS 1.3 Session Resumption and PSK](https://github.com/goulashsoup/introduction-to-https/blob/main/Learning%20HTTPS.md#72-tls-13-session-resumption-and-psk)
 
-    7.3. [TLS 1.3 0-RTT Data](/Learning%20HTTPS.md#73-tls-13-0-rtt-data)
+    7.3. [TLS 1.3 0-RTT Data](https://github.com/goulashsoup/introduction-to-https/blob/main/Learning%20HTTPS.md#73-tls-13-0-rtt-data)
 
-8. [Getting a Certificate](/Learning%20HTTPS.md#8-getting-a-certificate)
+8. [Getting a Certificate](https://github.com/goulashsoup/introduction-to-https/blob/main/Learning%20HTTPS.md#8-getting-a-certificate)
 
-9. [HTTP Strict Transport Security (HSTS)](/Learning%20HTTPS.md#9-http-strict-transport-security-hsts)
+9. [HTTP Strict Transport Security (HSTS)](https://github.com/goulashsoup/introduction-to-https/blob/main/Learning%20HTTPS.md#9-http-strict-transport-security-hsts)
 
 There is also a glossary:
 
@@ -100,7 +102,7 @@ As a human being i will have made and will make a lot of mistakes of all kinds. 
 
 ## Contact
 
-On my [profile page](github.com/goulashsoup) you'll find a mail address as a logged in github user.
+On my [profile page](https://github.com/goulashsoup) you'll find a mail address as a logged in github user.
 
 ## License & Copyright
 
